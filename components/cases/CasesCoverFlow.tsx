@@ -341,7 +341,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
                 ref={(node) => {
                   cardsRef.current[i] = node;
                 }}
-                className="absolute left-1/2 top-1/2 flex h-[19rem] w-[min(100%,16.5rem)] flex-col overflow-hidden rounded-[1.5rem] border border-ink/40 bg-ink shadow-[0_28px_60px_rgba(29,29,29,0.55)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember sm:h-[21rem] sm:w-[18.5rem]"
+                className="cover-card t-resize absolute left-1/2 top-1/2 flex flex-col overflow-hidden rounded-[1.5rem] border border-ink/40 bg-ink shadow-[0_28px_60px_rgba(29,29,29,0.55)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
                 style={{
                   transformStyle: "preserve-3d",
                   backfaceVisibility: "hidden",

@@ -9,6 +9,12 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { EASE, prefersReducedMotion } from "@/lib/motion";
 
+const OPEN_W = 24 * 16; // 24rem
+const OPEN_H = 30 * 16; // 30rem
+const PILL_W = 220;
+const PILL_H = 80;
+const STAGE_PAD = 20;
+
 const items = [
   {
     id: "strong",
@@ -19,7 +25,7 @@ const items = [
     href: "/tech",
     cta: "Про технологии",
     media: "from-[#fff275]/50 via-cosmic-lift to-cosmic",
-    start: { x: 16, y: 20 },
+    start: { x: 14, y: 18 },
     magnet: { radius: 220, strength: 0.16, ease: 1.65 },
   },
   {
@@ -31,7 +37,7 @@ const items = [
     href: "/rules",
     cta: "Читать правила",
     media: "from-[#e8dc6a]/45 via-cosmic-lift to-cosmic-deep",
-    start: { x: 52, y: 58 },
+    start: { x: 48, y: 42 },
     magnet: { radius: 260, strength: 0.22, ease: 2.2 },
   },
   {
@@ -43,10 +49,26 @@ const items = [
     href: "/order",
     cta: "Заказать сайт",
     media: "from-[#a78bfa]/45 via-[#4f1db5] to-cosmic",
-    start: { x: 70, y: 26 },
+    start: { x: 68, y: 22 },
     magnet: { radius: 190, strength: 0.13, ease: 1.35 },
   },
 ] as const;
+
+function clampHome(
+  x: number,
+  y: number,
+  stageW: number,
+  stageH: number,
+  cardW: number,
+  cardH: number,
+) {
+  const maxX = Math.max(STAGE_PAD, stageW - cardW - STAGE_PAD);
+  const maxY = Math.max(STAGE_PAD, stageH - cardH - STAGE_PAD);
+  return {
+    x: gsap.utils.clamp(STAGE_PAD, maxX, x),
+    y: gsap.utils.clamp(STAGE_PAD, maxY, y),
+  };
+}
 
 export function BeManifesto() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -99,8 +121,19 @@ export function BeManifesto() {
 
         const stageW = stage.clientWidth;
         const stageH = stage.clientHeight;
-        const baseX = (Number(card.dataset.startX) / 100) * (stageW - 220);
-        const baseY = (Number(card.dataset.startY) / 100) * (stageH - 80);
+        const originX = (Number(card.dataset.startX) / 100) * (stageW - PILL_W);
+        const originY = (Number(card.dataset.startY) / 100) * (stageH - PILL_H);
+        const homePill = clampHome(
+          originX,
+          originY,
+          stageW,
+          stageH,
+          PILL_W,
+          PILL_H,
+        );
+        let baseX = homePill.x;
+        let baseY = homePill.y;
+
         const radius = Number(card.dataset.magnetRadius ?? 220);
         const strength = Number(card.dataset.magnetStrength ?? 0.16);
         const easeDur = Number(card.dataset.magnetEase ?? 1.6);
@@ -118,8 +151,40 @@ export function BeManifesto() {
         gsap.set(iconClose, { opacity: 0 });
 
         let attracted = false;
+        let drifting = true;
 
-        // Per-card magnetism around a fixed home position
+        // Gentle ambient drift around the home point
+        const driftAmpX = gsap.utils.random(14, 28);
+        const driftAmpY = gsap.utils.random(10, 22);
+        const driftPhase = { t: gsap.utils.random(0, Math.PI * 2) };
+        const driftTween = gsap.to(driftPhase, {
+          t: `+=${Math.PI * 2}`,
+          duration: gsap.utils.random(9, 15),
+          ease: "none",
+          repeat: -1,
+          onUpdate: () => {
+            if (card.dataset.locked === "1" || !drifting) return;
+            const nextX = homePill.x + Math.sin(driftPhase.t) * driftAmpX;
+            const nextY =
+              homePill.y + Math.cos(driftPhase.t * 0.87) * driftAmpY;
+            const clamped = clampHome(
+              nextX,
+              nextY,
+              stageW,
+              stageH,
+              PILL_W,
+              PILL_H,
+            );
+            baseX = clamped.x;
+            baseY = clamped.y;
+            // Settle visually only when not magnet-pulled
+            if (!attracted) {
+              gsap.set(card, { x: baseX, y: baseY });
+            }
+          },
+        });
+
+        // Per-card magnetism around a drifting home position
         const onMove = (event: MouseEvent) => {
           if (card.dataset.locked === "1") return;
 
@@ -187,10 +252,23 @@ export function BeManifesto() {
 
         const open = () => {
           card.dataset.locked = "1";
+          drifting = false;
+          attracted = false;
+          driftTween.pause();
           card.classList.add("is-open", "z-lift");
+          const openPos = clampHome(
+            homePill.x,
+            homePill.y,
+            stageW,
+            stageH,
+            OPEN_W,
+            OPEN_H,
+          );
+          baseX = openPos.x;
+          baseY = openPos.y;
           gsap.to(card, {
-            x: baseX,
-            y: baseY,
+            x: openPos.x,
+            y: openPos.y,
             duration: 0.55,
             ease: EASE.soft,
             overwrite: "auto",
@@ -204,7 +282,26 @@ export function BeManifesto() {
             card.classList.remove("is-open", "z-lift");
             delete card.dataset.locked;
             attracted = false;
+            const pill = clampHome(
+              homePill.x,
+              homePill.y,
+              stageW,
+              stageH,
+              PILL_W,
+              PILL_H,
+            );
+            baseX = pill.x;
+            baseY = pill.y;
+            gsap.to(card, {
+              x: pill.x,
+              y: pill.y,
+              duration: 0.7,
+              ease: EASE.soft,
+              overwrite: "auto",
+            });
             gsap.to(media, { opacity: 0, duration: 0.3, ease: "power2.out" });
+            drifting = true;
+            driftTween.resume();
             tl.eventCallback("onReverseComplete", null);
           });
         };
@@ -216,6 +313,7 @@ export function BeManifesto() {
           window.removeEventListener("mousemove", onMove);
           card.removeEventListener("mouseenter", open);
           card.removeEventListener("mouseleave", close);
+          driftTween.kill();
           tl.kill();
           gsap.killTweensOf(card);
           delete card.dataset.locked;
@@ -237,7 +335,7 @@ export function BeManifesto() {
 
   return (
     <Section
-      className="relative overflow-hidden pb-8"
+      className="relative overflow-visible pb-8"
       data-scroll-rise
     >
       <Reveal>
@@ -256,7 +354,7 @@ export function BeManifesto() {
 
       <div
         ref={stageRef}
-        className="be-stage relative mt-10 min-h-[34rem] w-full sm:min-h-[38rem]"
+        className="be-stage relative mt-10 min-h-[40rem] w-full sm:min-h-[44rem] lg:min-h-[48rem]"
       >
         <div className="flex flex-col gap-4 lg:hidden">
           {items.map((item) => (

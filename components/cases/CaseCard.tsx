@@ -19,7 +19,7 @@ export function CaseCard({ item }: CaseCardProps) {
         href={href}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
-        className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink/25 bg-cosmic-lift/80 transition-colors duration-200 hover:border-vanilla/25 hover:bg-cosmic-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
+        className="case-card t-resize group relative flex h-full flex-col overflow-hidden rounded-xl border border-ink/25 bg-cosmic-lift/80 transition-colors duration-200 hover:border-vanilla/25 hover:bg-cosmic-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
       >
         <div
           data-case-mask

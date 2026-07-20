@@ -135,10 +135,71 @@ html[data-markers]::after {
   transform: translateX(0.2rem);
 }
 
+/* transitions.dev — smooth width/height resize */
+:root {
+  --resize-dur: 300ms;
+  --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-resize {
+  transition:
+    width var(--resize-dur) var(--resize-ease),
+    height var(--resize-dur) var(--resize-ease),
+    min-height var(--resize-dur) var(--resize-ease);
+  will-change: width, height;
+}
+
+/* Case grid cards — compact baseline, grow on hover */
+.case-card.t-resize {
+  width: calc(100% - 0.75rem);
+  min-height: 100%;
+  margin-inline: auto;
+}
+
+.case-card.t-resize:hover,
+.case-card.t-resize:focus-visible {
+  width: 100%;
+  min-height: calc(100% + 0.75rem);
+  z-index: 2;
+}
+
+/* Cover-flow cards — modest size bump on the front (pointer-events) card */
+.cover-card.t-resize {
+  width: min(100%, 16.5rem);
+  height: 19rem;
+}
+
+.cover-card.t-resize:hover,
+.cover-card.t-resize:focus-visible {
+  width: min(100%, 17.75rem);
+  height: 20.5rem;
+}
+
+@media (min-width: 640px) {
+  .cover-card.t-resize {
+    width: 18.5rem;
+    height: 21rem;
+  }
+
+  .cover-card.t-resize:hover,
+  .cover-card.t-resize:focus-visible {
+    width: 20rem;
+    height: 22.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-resize {
+    transition: none !important;
+  }
+}
+
 /* Chaotic floating Be manifesto stage */
 .be-stage {
   background:
     radial-gradient(circle at 40% 35%, rgba(79, 29, 181, 0.55), transparent 55%);
+  /* Room for expanded 24×30rem pills + inward clamp padding */
+  overflow: visible;
 }
 
 .be-card {
