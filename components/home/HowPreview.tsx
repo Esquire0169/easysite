@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { GrowLine } from "@/components/motion/GrowLine";
+import { StaggerIn } from "@/components/motion/StaggerIn";
 import { Card } from "@/components/ui/Card";
 import { ArrowIcon } from "@/components/ui/icons";
+import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 
 const steps = [
@@ -26,73 +29,51 @@ const steps = [
   },
 ];
 
-/**
- * How-it-works preview.
- * Desktop: HomeScroll pins `[data-how-stage]` and scrubs children (fill + step accents).
- * Mobile: batch pop only — content always readable (never opacity-killed).
- */
 export function HowPreview() {
   return (
-    <Section className="section-how">
-      <div
-        data-scroll-rise
-        className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
-      >
-        <div>
+    <Section>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <Reveal>
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-ember">
             Как это работает
           </p>
           <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-vanilla sm:text-4xl">
             Четыре шага до готового сайта
           </h2>
-        </div>
-        <Link
-          href="/how-it-works"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-ember transition-colors hover:text-ember-hover"
-        >
-          Подробный сценарий
-          <ArrowIcon size={13} />
-        </Link>
+        </Reveal>
+        <Reveal delayMs={80}>
+          <Link
+            href="/how-it-works"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ember transition-colors hover:text-ember-hover"
+          >
+            Подробный сценарий
+            <ArrowIcon size={13} />
+          </Link>
+        </Reveal>
       </div>
 
-      <div data-how-stage className="relative mt-8">
-        <div className="relative mb-8 hidden max-w-full lg:block" aria-hidden>
-          <div className="h-px w-full bg-vanilla/15" />
-          <div
-            data-how-fill
-            className="absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-ember will-change-transform"
-          />
-        </div>
-
-        <div className="mt-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step, index) => (
-            <div
-              key={step.n}
-              data-how-step
-              data-how-index={index}
-              className="will-change-transform"
-            >
-              <Card hover className="h-full">
-                <p
-                  data-how-num
-                  className="font-display text-sm text-ember will-change-transform"
-                >
-                  {step.n}
-                </p>
-                <p
-                  data-how-title
-                  className="mt-3 font-display text-lg font-semibold text-vanilla"
-                >
-                  {step.title}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-vanilla/70">
-                  {step.text}
-                </p>
-              </Card>
-            </div>
-          ))}
-        </div>
+      <div className="relative mt-8">
+        <GrowLine className="mb-8 hidden max-w-full lg:block" />
       </div>
+
+      <StaggerIn
+        className="mt-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        from="start"
+      >
+        {steps.map((step) => (
+          <div key={step.n} data-stagger-item>
+            <Card hover className="h-full">
+              <p className="font-display text-sm text-ember">{step.n}</p>
+              <p className="mt-3 font-display text-lg font-semibold text-vanilla">
+                {step.title}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-vanilla/70">
+                {step.text}
+              </p>
+            </Card>
+          </div>
+        ))}
+      </StaggerIn>
     </Section>
   );
 }

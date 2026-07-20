@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { cases } from "@/lib/cases";
 import { CaseCard } from "@/components/cases/CaseCard";
+import { StaggerIn } from "@/components/motion/StaggerIn";
 import { ArrowIcon } from "@/components/ui/icons";
+import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 
 export function CasesPreview() {
@@ -9,11 +11,8 @@ export function CasesPreview() {
 
   return (
     <Section className="pb-24 sm:pb-28">
-      <div
-        data-scroll-rise
-        className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
-      >
-        <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <Reveal>
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-ember">
             Кейсы
           </p>
@@ -24,23 +23,28 @@ export function CasesPreview() {
             Мы строим экосистему быстрых сайтов для малого бизнеса и стартапов —
             каждый со своим доменом, на общей инфраструктуре.
           </p>
-        </div>
-        <Link
-          href="/cases"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-ember transition-colors hover:text-ember-hover"
-        >
-          Все кейсы
-          <ArrowIcon size={13} />
-        </Link>
+        </Reveal>
+        <Reveal delayMs={80}>
+          <Link
+            href="/cases"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ember transition-colors hover:text-ember-hover"
+          >
+            Все кейсы
+            <ArrowIcon size={13} />
+          </Link>
+        </Reveal>
       </div>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <StaggerIn
+        className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        from="random"
+      >
         {preview.map((item) => (
-          <div key={item.slug} data-scroll-item className="h-full">
+          <div key={item.slug} data-stagger-item className="h-full">
             <CaseCard item={item} />
           </div>
         ))}
-      </div>
+      </StaggerIn>
     </Section>
   );
 }

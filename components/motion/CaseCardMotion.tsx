@@ -1,13 +1,9 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MOTION } from "@/lib/motionSystem";
 import { prefersReducedMotion } from "@/lib/motion";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 type CaseCardMotionProps = {
   children: ReactNode;
@@ -18,33 +14,31 @@ type CaseCardMotionProps = {
  * mega-reveal-reveal-42 + tigranz-image-mask-reveal
  * Card assembles + media mask wipe on enter.
  */
-export function CaseCardMotion({
-  children,
-  className = "",
-}: CaseCardMotionProps) {
+export function CaseCardMotion({ children, className = "" }: CaseCardMotionProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const node = ref.current;
-      if (!node || prefersReducedMotion()) return;
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || prefersReducedMotion()) return;
 
-      const media = node.querySelector<HTMLElement>("[data-case-mask]");
-      const parts = node.querySelectorAll<HTMLElement>("[data-assemble]");
+    gsap.registerPlugin(ScrollTrigger);
 
+    const media = node.querySelector<HTMLElement>("[data-case-mask]");
+    const parts = node.querySelectorAll<HTMLElement>("[data-assemble]");
+
+    const ctx = gsap.context(() => {
       gsap.from(node, {
         y: 56,
         scale: 0.92,
         autoAlpha: 0,
         rotateX: 6,
-        duration: MOTION.duration.assemble,
-        ease: MOTION.ease.soft,
+        duration: 0.95,
+        ease: "power4.out",
         immediateRender: false,
         scrollTrigger: {
           trigger: node,
           start: "top 88%",
           toggleActions: "play none none none",
-          refreshPriority: MOTION.refreshPriority.cases,
         },
       });
 
@@ -54,13 +48,12 @@ export function CaseCardMotion({
           autoAlpha: 0,
           stagger: 0.07,
           duration: 0.7,
-          ease: MOTION.ease.out,
+          ease: "power3.out",
           immediateRender: false,
           scrollTrigger: {
             trigger: node,
             start: "top 86%",
             toggleActions: "play none none none",
-            refreshPriority: MOTION.refreshPriority.cases + 1,
           },
         });
       }
@@ -72,20 +65,20 @@ export function CaseCardMotion({
           {
             clipPath: "inset(0% 0% 0% 0% round 0px)",
             duration: 1.05,
-            ease: MOTION.ease.soft,
+            ease: "power4.out",
             immediateRender: false,
             scrollTrigger: {
               trigger: node,
               start: "top 88%",
               toggleActions: "play none none none",
-              refreshPriority: MOTION.refreshPriority.cases + 2,
             },
           },
         );
       }
-    },
-    { scope: ref },
-  );
+    }, node);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <div ref={ref} className={`h-full will-change-transform ${className}`}>

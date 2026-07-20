@@ -78,7 +78,7 @@ const tones = {
 
 /**
  * Feature cards in normal document flow.
- * HomeScroll: ScrollTrigger.batch pop (interval/batchMax, failsafe).
+ * HomeScroll: ScrollTrigger.batch pop (animation-library pattern).
  */
 export function ShowcaseStack() {
   return (
@@ -137,11 +137,6 @@ export function ShowcaseStack() {
                         #23212c
                       `,
                     }}
-                  />
-                  {/* Micro-moment: diagonal shine sweep on batch enter (HomeScroll) */}
-                  <div
-                    data-feature-shine
-                    className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-vanilla/18 to-transparent opacity-0 will-change-transform"
                   />
                 </div>
 

@@ -10,7 +10,7 @@ type GrowLineProps = {
   vertical?: boolean;
 };
 
-/** Divider grow — scrubbed scale so progress tracks scroll (ease none). */
+/** Divider grow — 13g .divider animation. */
 export function GrowLine({ className = "", vertical = false }: GrowLineProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -19,25 +19,22 @@ export function GrowLine({ className = "", vertical = false }: GrowLineProps) {
     if (!node) return;
 
     if (prefersReducedMotion()) {
-      gsap.set(node, vertical ? { scaleY: 1 } : { scaleX: 1 });
+      gsap.set(node, vertical ? { height: "100%" } : { width: "100%" });
       return;
     }
 
     gsap.registerPlugin(ScrollTrigger);
-    gsap.set(node, {
-      ...(vertical ? { scaleY: 0 } : { scaleX: 0 }),
-      transformOrigin: vertical ? "center top" : "left center",
-    });
+    gsap.set(node, vertical ? { height: "0%" } : { width: "0%" });
 
     const ctx = gsap.context(() => {
       gsap.to(node, {
-        ...(vertical ? { scaleY: 1 } : { scaleX: 1 }),
-        ease: "none",
+        ...(vertical ? { height: "100%" } : { width: "100%" }),
+        duration: 1.2,
+        ease: "expo.out",
         scrollTrigger: {
           trigger: node.parentElement ?? node,
-          start: "clamp(top 85%)",
-          end: "clamp(top 45%)",
-          scrub: true,
+          start: "top 85%",
+          toggleActions: "play none none none",
         },
       });
     }, node);
@@ -48,11 +45,10 @@ export function GrowLine({ className = "", vertical = false }: GrowLineProps) {
   return (
     <div
       ref={ref}
-      data-grow-line
       aria-hidden
       className={[
-        "origin-left bg-vanilla/25 will-change-transform",
-        vertical ? "h-full w-px origin-top" : "h-px w-full",
+        "bg-vanilla/25",
+        vertical ? "w-px" : "h-px",
         className,
       ].join(" ")}
     />

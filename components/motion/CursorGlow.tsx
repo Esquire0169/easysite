@@ -1,17 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { prefersReducedMotion } from "@/lib/motion";
 
-gsap.registerPlugin(useGSAP);
-
-/** Soft ember glow that follows the cursor on desktop (quickTo). */
+/** Soft ember glow that follows the cursor on desktop. */
 export function CursorGlow() {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     const node = ref.current;
     if (!node || prefersReducedMotion()) return;
     if (window.matchMedia("(pointer: coarse)").matches) {
@@ -21,15 +18,12 @@ export function CursorGlow() {
 
     gsap.set(node, { xPercent: -50, yPercent: -50, opacity: 0 });
 
-    const xTo = gsap.quickTo(node, "x", { duration: 0.55, ease: "power3.out" });
-    const yTo = gsap.quickTo(node, "y", { duration: 0.55, ease: "power3.out" });
-
     const onMove = (event: MouseEvent) => {
-      xTo(event.clientX);
-      yTo(event.clientY);
       gsap.to(node, {
+        x: event.clientX,
+        y: event.clientY,
         opacity: 0.55,
-        duration: 0.4,
+        duration: 0.55,
         ease: "power3.out",
         overwrite: "auto",
       });

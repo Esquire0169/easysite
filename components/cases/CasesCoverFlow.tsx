@@ -1,124 +1,30 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { Flip } from "gsap/Flip";
 import type { CaseItem } from "@/lib/cases";
 import { categoryLabels } from "@/lib/cases";
 import { ChevronIcon } from "@/components/ui/icons";
-import { MOTION } from "@/lib/motionSystem";
 import { prefersReducedMotion } from "@/lib/motion";
-
-gsap.registerPlugin(Flip);
 
 type CasesCoverFlowProps = {
   items: CaseItem[];
 };
 
 /**
- * Readable cover-flow carousel — Flip side cards + rotateY settle on active.
- * Keyboard a11y intact; not scroll-scrubbed.
+ * Readable cover-flow carousel with prev/next controls (not scroll-scrubbed mess).
  */
 export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
   const slice = items.slice(0, 8);
   const [index, setIndex] = useState(0);
   const len = slice.length;
-  const stageRef = useRef<HTMLDivElement>(null);
-  const dirRef = useRef<1 | -1>(1);
-  const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
-  const firstPaint = useRef(true);
-
-  const captureState = useCallback(() => {
-    const stage = stageRef.current;
-    if (!stage || prefersReducedMotion()) return;
-    const targets = stage.querySelectorAll<HTMLElement>(
-      "[data-cover-active], [data-cover-side]",
-    );
-    if (targets.length) {
-      flipStateRef.current = Flip.getState(targets);
-    }
-  }, []);
 
   const go = useCallback(
     (dir: -1 | 1) => {
-      captureState();
-      dirRef.current = dir;
       setIndex((i) => (i + dir + len) % len);
     },
-    [captureState, len],
+    [len],
   );
-
-  const goTo = useCallback(
-    (next: number) => {
-      captureState();
-      dirRef.current = (next > index ? 1 : -1) as 1 | -1;
-      setIndex(next);
-    },
-    [captureState, index],
-  );
-
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!stage || prefersReducedMotion() || len < 2) return;
-
-    const active = stage.querySelector<HTMLElement>("[data-cover-active]");
-    const sides = gsap.utils.toArray<HTMLElement>(
-      stage.querySelectorAll("[data-cover-side]"),
-    );
-
-    if (firstPaint.current) {
-      firstPaint.current = false;
-      flipStateRef.current = null;
-      return;
-    }
-
-    const state = flipStateRef.current;
-    flipStateRef.current = null;
-
-    if (state) {
-      Flip.from(state, {
-        duration: 0.5,
-        ease: MOTION.ease.out,
-        absolute: false,
-        nested: true,
-        prune: true,
-      });
-    }
-
-    if (active) {
-      gsap.fromTo(
-        active,
-        {
-          rotateY: dirRef.current * 18,
-          scale: 0.94,
-          transformPerspective: 900,
-        },
-        {
-          rotateY: 0,
-          scale: 1,
-          duration: 0.58,
-          ease: MOTION.ease.soft,
-          overwrite: "auto",
-        },
-      );
-    }
-
-    sides.forEach((el) => {
-      const side = el.dataset.coverSide === "left" ? -1 : 1;
-      gsap.fromTo(
-        el,
-        { rotateY: side * 12, autoAlpha: 0.35 },
-        {
-          rotateY: side * 8,
-          autoAlpha: 0.5,
-          duration: 0.48,
-          ease: MOTION.ease.out,
-          overwrite: "auto",
-        },
-      );
-    });
-  }, [index, len]);
 
   useEffect(() => {
     if (prefersReducedMotion() || len < 2) return;
@@ -157,19 +63,17 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
           <ChevronIcon size={18} className="rotate-90" />
         </button>
 
-        <div
-          ref={stageRef}
-          className="relative mx-auto grid h-[22rem] w-full max-w-3xl place-items-center [perspective:1000px] sm:h-[24rem]"
-        >
+        <div className="relative mx-auto grid h-[22rem] w-full max-w-3xl place-items-center sm:h-[24rem]">
+          {/* Side cards — decorative only, no overlapping text fight */}
           <SideCard item={prev} side="left" />
           <SideCard item={next} side="right" />
 
+          {/* Active card — solid, fully readable */}
           <Link
-            data-cover-active
             href={active.externalUrl ?? `/cases/${active.slug}`}
             target={active.externalUrl ? "_blank" : undefined}
             rel={active.externalUrl ? "noopener noreferrer" : undefined}
-            className="relative z-20 flex h-[20rem] w-[min(100%,18rem)] flex-col overflow-hidden rounded-[1.5rem] border border-vanilla/20 bg-[#1a1820] shadow-[0_28px_60px_rgba(0,0,0,0.55)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember sm:h-[22rem] sm:w-[20rem]"
+            className="relative z-20 flex h-[20rem] w-[min(100%,18rem)] flex-col overflow-hidden rounded-[1.5rem] border border-vanilla/20 bg-[#1a1820] shadow-[0_28px_60px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember sm:h-[22rem] sm:w-[20rem]"
           >
             <div
               className="relative min-h-[48%] flex-1"
@@ -212,12 +116,10 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
           <button
             key={item.slug}
             type="button"
-            onClick={() => goTo(i)}
+            onClick={() => setIndex(i)}
             className={[
               "h-1.5 rounded-full transition-all",
-              i === index
-                ? "w-6 bg-ember"
-                : "w-1.5 bg-vanilla/25 hover:bg-vanilla/45",
+              i === index ? "w-6 bg-ember" : "w-1.5 bg-vanilla/25 hover:bg-vanilla/45",
             ].join(" ")}
             aria-label={`Кейс ${i + 1}`}
           />
@@ -240,10 +142,9 @@ function SideCard({
 }) {
   return (
     <div
-      data-cover-side={side}
       aria-hidden
       className={[
-        "pointer-events-none absolute top-1/2 z-10 hidden h-[16rem] w-[12rem] -translate-y-1/2 overflow-hidden rounded-2xl border border-vanilla/10 bg-[#14121a] opacity-50 will-change-transform sm:block",
+        "pointer-events-none absolute top-1/2 z-10 hidden h-[16rem] w-[12rem] -translate-y-1/2 overflow-hidden rounded-2xl border border-vanilla/10 bg-[#14121a] opacity-50 sm:block",
         side === "left"
           ? "left-[4%] -translate-x-0 rotate-[-8deg] scale-90"
           : "right-[4%] translate-x-0 rotate-[8deg] scale-90",

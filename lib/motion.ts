@@ -9,7 +9,7 @@ export const LOADER_COLORS = [
 
 export const LOADER_STORAGE_KEY = "easysite-loader-played";
 
-/** Shared easing — soft openings (canonical tokens also in motionSystem). */
+/** Shared easing — soft “candy” openings across the site. */
 export const EASE = {
   out: "expo.out",
   inOut: "power3.inOut",
