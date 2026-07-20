@@ -11,6 +11,7 @@
  * | gsap-plugin-textplugin         | TextCycle                                          |
  * | gsap-plugin-scrambletext       | TextScramble (custom stand-in)                     |
  * | gsap-cover-flow                | CasesCoverFlow                                     |
+ * | mega-slider-drag               | CasesCoverFlow (Draggable + Inertia cover-flow)    |
  * | gsap-lag-trail                 | LagLayers [data-lag]                               |
  * | mega-transition-trans-extra-6  | RouteTransition wipe                               |
  * | mega-transition-pixelate       | RouteTransition pixels                             |
