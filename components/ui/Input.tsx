@@ -20,7 +20,7 @@ export function Input({
       <input
         id={inputId}
         className={[
-          "h-12 w-full rounded-lg border bg-cosmic-deep px-4 text-sm text-vanilla placeholder:text-vanilla/35",
+          "h-12 w-full rounded-lg border bg-ink px-4 text-sm text-vanilla placeholder:text-vanilla/35",
           "transition-colors duration-200",
           "focus:border-ember focus:outline-none focus:ring-2 focus:ring-ember/30",
           error ? "border-ember/70" : "border-vanilla/15 hover:border-vanilla/30",

@@ -13,20 +13,20 @@ type PillButtonProps = {
 
 const tones = {
   dark: {
-    shell: "bg-[#2b2b2b] text-white border border-white/10",
-    badge: "bg-[#b8e0a0] text-[#131313]",
+    shell: "bg-ink text-vanilla border border-vanilla/15",
+    badge: "bg-ember text-ink",
   },
   green: {
-    shell: "bg-[#b7d8a8] text-[#131313] border border-black/5",
-    badge: "bg-[#131313] text-white",
+    shell: "bg-ember text-ink border border-ink/10",
+    badge: "bg-cosmic text-vanilla",
   },
   yellow: {
-    shell: "bg-[#e6d27a] text-[#131313] border border-black/5",
-    badge: "bg-[#131313] text-white",
+    shell: "bg-vanilla-muted text-ink border border-ink/10",
+    badge: "bg-cosmic text-vanilla",
   },
   blue: {
-    shell: "bg-[#a9aee8] text-[#131313] border border-black/5",
-    badge: "bg-[#131313] text-white",
+    shell: "bg-[#a78bfa] text-ink border border-ink/10",
+    badge: "bg-cosmic text-vanilla",
   },
 } as const;
 

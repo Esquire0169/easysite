@@ -19,16 +19,16 @@ export function CaseCard({ item }: CaseCardProps) {
         href={href}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
-        className="group flex h-full flex-col overflow-hidden rounded-xl border border-vanilla/10 bg-cosmic-lift/80 transition-colors duration-200 hover:border-vanilla/25 hover:bg-cosmic-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
+        className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink/25 bg-cosmic-lift/80 transition-colors duration-200 hover:border-vanilla/25 hover:bg-cosmic-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
       >
         <div
           data-case-mask
-          className="relative aspect-[16/10] border-b border-vanilla/10"
+          className="relative aspect-[16/10] border-b border-ink/20"
           style={{
-            background: `linear-gradient(145deg, ${item.accent}33 0%, #2e2b38 55%, #23212c 100%)`,
+            background: `linear-gradient(145deg, ${item.accent}33 0%, #4f1db5 50%, #1d1d1d 100%)`,
           }}
         >
-          <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_30%_40%,rgba(241,254,200,0.25),transparent_40%)]" />
+          <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_30%_40%,rgba(255,242,117,0.25),transparent_40%)]" />
           <div className="absolute bottom-4 left-4 right-4" data-assemble>
             <p className="font-display text-lg font-semibold text-vanilla drop-shadow">
               {item.title}

@@ -57,22 +57,22 @@ const items: ShowcaseItem[] = [
 
 const tones = {
   ember: {
-    wash: "rgba(232, 168, 124, 0.38)",
-    washSoft: "rgba(201, 138, 95, 0.22)",
-    card: "bg-[#1a1820]/80 text-vanilla",
+    wash: "rgba(255, 242, 117, 0.38)",
+    washSoft: "rgba(232, 212, 80, 0.22)",
+    card: "bg-[#2b0878]/80 text-vanilla",
     accent: "text-ember",
   },
   vanilla: {
-    wash: "rgba(241, 254, 200, 0.32)",
-    washSoft: "rgba(216, 228, 168, 0.2)",
-    card: "bg-[#23212c]/80 text-vanilla",
+    wash: "rgba(255, 242, 117, 0.32)",
+    washSoft: "rgba(232, 220, 106, 0.2)",
+    card: "bg-[#3a0ca3]/80 text-vanilla",
     accent: "text-vanilla",
   },
   violet: {
-    wash: "rgba(169, 174, 232, 0.36)",
-    washSoft: "rgba(107, 100, 144, 0.24)",
-    card: "bg-[#14121a]/80 text-vanilla",
-    accent: "text-[#c4c8f0]",
+    wash: "rgba(79, 29, 181, 0.45)",
+    washSoft: "rgba(43, 8, 120, 0.35)",
+    card: "bg-[#220a70]/80 text-vanilla",
+    accent: "text-vanilla-muted",
   },
 } as const;
 
@@ -134,7 +134,7 @@ export function ShowcaseStack() {
                       background: `
                         radial-gradient(ellipse 70% 80% at ${flip ? "18%" : "82%"} 45%, ${tone.wash} 0%, transparent 60%),
                         radial-gradient(ellipse 55% 60% at 50% 100%, ${tone.washSoft} 0%, transparent 50%),
-                        #23212c
+                        #3a0ca3
                       `,
                     }}
                   />

@@ -73,15 +73,15 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
             href={active.externalUrl ?? `/cases/${active.slug}`}
             target={active.externalUrl ? "_blank" : undefined}
             rel={active.externalUrl ? "noopener noreferrer" : undefined}
-            className="relative z-20 flex h-[20rem] w-[min(100%,18rem)] flex-col overflow-hidden rounded-[1.5rem] border border-vanilla/20 bg-[#1a1820] shadow-[0_28px_60px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember sm:h-[22rem] sm:w-[20rem]"
+            className="relative z-20 flex h-[20rem] w-[min(100%,18rem)] flex-col overflow-hidden rounded-[1.5rem] border border-ink/40 bg-ink shadow-[0_28px_60px_rgba(29,29,29,0.65)] transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember sm:h-[22rem] sm:w-[20rem]"
           >
             <div
               className="relative min-h-[48%] flex-1"
               style={{
-                background: `linear-gradient(155deg, ${active.accent}55 0%, #2e2b38 55%, #1a1820 100%)`,
+                background: `linear-gradient(155deg, ${active.accent}55 0%, #4f1db5 45%, #1d1d1d 100%)`,
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a1820] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
             </div>
             <div className="relative z-10 -mt-8 flex flex-1 flex-col px-5 pb-5">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ember">
@@ -144,13 +144,13 @@ function SideCard({
     <div
       aria-hidden
       className={[
-        "pointer-events-none absolute top-1/2 z-10 hidden h-[16rem] w-[12rem] -translate-y-1/2 overflow-hidden rounded-2xl border border-vanilla/10 bg-[#14121a] opacity-50 sm:block",
+        "pointer-events-none absolute top-1/2 z-10 hidden h-[16rem] w-[12rem] -translate-y-1/2 overflow-hidden rounded-2xl border border-ink/30 bg-ink opacity-50 sm:block",
         side === "left"
           ? "left-[4%] -translate-x-0 rotate-[-8deg] scale-90"
           : "right-[4%] translate-x-0 rotate-[8deg] scale-90",
       ].join(" ")}
       style={{
-        background: `linear-gradient(160deg, ${item.accent}22, #14121a 70%)`,
+        background: `linear-gradient(160deg, ${item.accent}22, #1d1d1d 70%)`,
       }}
     >
       <div className="flex h-full flex-col justify-end p-4">

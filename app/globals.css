@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cosmic: #23212c;
-  --color-cosmic-lift: #2e2b38;
-  --color-cosmic-deep: #1a1820;
-  --color-vanilla: #f1fec8;
-  --color-vanilla-muted: #d8e4a8;
-  --color-ember: #e8a87c;
-  --color-ember-hover: #f0b892;
-  --color-ember-deep: #c98a5f;
+  /* Royal Iris — primary dark / backgrounds */
+  --color-cosmic: #3a0ca3;
+  --color-cosmic-lift: #4f1db5;
+  --color-cosmic-deep: #2b0878;
+  /* Jet Black — grounding / ink / chrome weight */
+  --color-ink: #1d1d1d;
+  /* Butter Yellow — light text / CTAs / highlights */
+  --color-vanilla: #fff275;
+  --color-vanilla-muted: #e8dc6a;
+  --color-ember: #fff275;
+  --color-ember-hover: #fff8a8;
+  --color-ember-deep: #e8d450;
 
   --font-display: var(--font-syne);
   --font-sans: var(--font-manrope);
@@ -46,7 +50,7 @@
 
   ::selection {
     background-color: color-mix(in srgb, var(--color-ember) 55%, transparent);
-    color: var(--color-cosmic);
+    color: var(--color-ink);
   }
 }
 
@@ -134,7 +138,7 @@ html[data-markers]::after {
 /* Chaotic floating Be manifesto stage */
 .be-stage {
   background:
-    radial-gradient(circle at 40% 35%, rgba(46, 43, 56, 0.55), transparent 55%);
+    radial-gradient(circle at 40% 35%, rgba(79, 29, 181, 0.55), transparent 55%);
 }
 
 .be-card {
@@ -156,9 +160,9 @@ html[data-markers]::after {
 
 .be-media--b {
   background:
-    radial-gradient(circle at 20% 30%, rgba(241, 254, 200, 0.22), transparent 42%),
-    radial-gradient(circle at 80% 70%, rgba(232, 168, 124, 0.3), transparent 45%),
-    linear-gradient(135deg, #2e2b38 0%, #23212c 55%, #1a1820 100%);
+    radial-gradient(circle at 20% 30%, rgba(255, 242, 117, 0.22), transparent 42%),
+    radial-gradient(circle at 80% 70%, rgba(255, 242, 117, 0.3), transparent 45%),
+    linear-gradient(135deg, #4f1db5 0%, #3a0ca3 55%, #2b0878 100%);
   animation-duration: 18s;
   animation-direction: alternate-reverse;
 }
@@ -199,7 +203,7 @@ html[data-markers]::after {
 }
 
 .site-header.is-condensed .nav-pill {
-  background-color: color-mix(in srgb, #1c1a22 96%, transparent);
+  background-color: color-mix(in srgb, #24066e 96%, transparent);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
 }
 
@@ -223,7 +227,7 @@ html[data-markers]::after {
 }
 
 .menu-btn--active .menu-btn__chevron {
-  color: var(--color-cosmic);
+  color: var(--color-ink);
 }
 
 .mega-wrap {
@@ -253,7 +257,7 @@ html[data-markers]::after {
   padding: 0.35rem 0.45rem 0.35rem 1rem;
   border-radius: 999px;
   background: var(--color-ember);
-  color: var(--color-cosmic);
+  color: var(--color-ink);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: -0.01em;

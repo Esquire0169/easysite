@@ -13,36 +13,36 @@ const items = [
   {
     id: "strong",
     title: "Be strong",
-    toneClass: "bg-[#b7d8a8]",
+    toneClass: "bg-[#fff275]",
     subtitle: "Скорость платформы",
     text: "Сайт за 24 часа на своём железе: хостинг, сервера, SSL и базовая защита. Вам не нужно искать дизайнера, верстальщика и хостинг.",
     href: "/tech",
     cta: "Про технологии",
-    media: "from-[#b7d8a8]/50 via-cosmic-lift to-cosmic",
+    media: "from-[#fff275]/50 via-cosmic-lift to-cosmic",
     start: { x: 16, y: 20 },
     magnet: { radius: 220, strength: 0.16, ease: 1.65 },
   },
   {
     id: "true",
     title: "Be true",
-    toneClass: "bg-[#e6d27a]",
+    toneClass: "bg-[#e8dc6a]",
     subtitle: "Честный оффер",
     text: "Фиксированные 10 000 ₽. Без калькуляторов, пакетов и скрытых доплат. Если нужны бесконечные правки — это не к нам.",
     href: "/rules",
     cta: "Читать правила",
-    media: "from-[#e6d27a]/45 via-cosmic-lift to-cosmic-deep",
+    media: "from-[#e8dc6a]/45 via-cosmic-lift to-cosmic-deep",
     start: { x: 52, y: 58 },
     magnet: { radius: 260, strength: 0.22, ease: 2.2 },
   },
   {
     id: "bold",
     title: "Be bold",
-    toneClass: "bg-[#a9aee8]",
+    toneClass: "bg-[#a78bfa]",
     subtitle: "Законченный продукт",
     text: "Один выстрел — работающий сайт с доменом easysite. Без правок после сдачи. Дальше только использование.",
     href: "/order",
     cta: "Заказать сайт",
-    media: "from-[#a9aee8]/45 via-[#3a3348] to-cosmic",
+    media: "from-[#a78bfa]/45 via-[#4f1db5] to-cosmic",
     start: { x: 70, y: 26 },
     magnet: { radius: 190, strength: 0.13, ease: 1.35 },
   },
@@ -267,7 +267,7 @@ export function BeManifesto() {
               <div
                 className={`relative bg-gradient-to-br ${item.media} px-5 py-6`}
               >
-                <p className="font-display text-2xl font-semibold text-[#131313]">
+                <p className="font-display text-2xl font-semibold text-ink">
                   {item.title}
                 </p>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-cosmic/70">
@@ -303,7 +303,7 @@ export function BeManifesto() {
               <div
                 data-be-shell
                 className={[
-                  "be-shell relative overflow-hidden border border-black/10 shadow-[0_18px_50px_rgba(0,0,0,0.35)]",
+                  "be-shell relative overflow-hidden border border-ink/15 shadow-[0_18px_50px_rgba(29,29,29,0.4)]",
                   item.toneClass,
                 ].join(" ")}
               >
@@ -318,7 +318,7 @@ export function BeManifesto() {
                   />
                 </div>
 
-                <div className="absolute left-1.5 top-1.5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[#131313] text-white">
+                <div className="absolute left-1.5 top-1.5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-ink text-vanilla">
                   <span
                     data-be-icon-open
                     className="inline-flex items-center justify-center"
@@ -337,7 +337,7 @@ export function BeManifesto() {
                   data-be-face
                   className="relative z-10 flex h-full items-center pl-12 pr-4"
                 >
-                  <span className="font-display text-[15px] font-semibold leading-none tracking-tight text-[#131313]">
+                  <span className="font-display text-[15px] font-semibold leading-none tracking-tight text-ink">
                     {item.title}
                   </span>
                 </div>

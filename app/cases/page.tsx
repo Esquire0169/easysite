@@ -12,11 +12,12 @@ export const metadata: Metadata = {
     "Галерея проектов EasySite: платные и бесплатные сайты на общей платформе.",
 };
 
+/* Genitive after «для»: each phrase must agree with that slot */
 const CYCLE = [
-  "малый бизнес",
-  "стартапы",
-  "креатив",
-  "социальные проекты",
+  "малого бизнеса",
+  "стартапов",
+  "креатива",
+  "социальных проектов",
 ] as const;
 
 export default function CasesPage() {

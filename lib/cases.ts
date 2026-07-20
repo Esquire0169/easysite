@@ -43,7 +43,7 @@ export const cases: CaseItem[] = [
     description:
       "Лендинг для районной пекарни: пять смысловых блоков, акцент на свежести и самовывозе. Размещён на инфраструктуре EasySite с доменом easysite-pekarnya-utro.ru.",
     domain: "easysite-pekarnya-utro.ru",
-    accent: "#E8A87C",
+    accent: "#FFF275",
   },
   {
     slug: "nova-fit",
@@ -55,7 +55,7 @@ export const cases: CaseItem[] = [
     description:
       "Короткий лендинг стартапа: оффер, расписание пробных занятий, форма записи. Запущен за сутки на платформе EasySite.",
     domain: "nova-fit.easysite.ru",
-    accent: "#F1FEC8",
+    accent: "#FFF8A8",
   },
   {
     slug: "atelier-lin",
@@ -67,7 +67,7 @@ export const cases: CaseItem[] = [
     description:
       "Минималистичная визитка с галереей работ и контактами. Фиксированный формат 5–7 блоков, без правок после сдачи.",
     domain: "easysite-atelier-lin.ru",
-    accent: "#D8E4A8",
+    accent: "#E8DC6A",
   },
   {
     slug: "dobryi-ugol",
@@ -79,7 +79,7 @@ export const cases: CaseItem[] = [
     description:
       "Проект из программы бесплатных сайтов: тот же срок 24 часа, та же инфраструктура и префикс easysite — без оплаты клиента.",
     domain: "dobryi-ugol.easysite.ru",
-    accent: "#E8A87C",
+    accent: "#FFF275",
   },
   {
     slug: "craft-tools",
@@ -91,7 +91,7 @@ export const cases: CaseItem[] = [
     description:
       "Сайт-визитка B2B: ассортимент, условия, контакты. Всё под ключ — дизайн, тексты, SSL и хостинг на серверах EasySite.",
     domain: "easysite-craft-tools.ru",
-    accent: "#F1FEC8",
+    accent: "#FFF8A8",
   },
   {
     slug: "signal-lab",
@@ -103,7 +103,7 @@ export const cases: CaseItem[] = [
     description:
       "Один выстрел: работающий сайт за сутки. Клиент получил ссылку и сразу начал собирать заявки — без долгих согласований.",
     domain: "signal-lab.easysite.ru",
-    accent: "#C98A5F",
+    accent: "#E8D450",
   },
   {
     slug: "gorod-света",
@@ -115,7 +115,7 @@ export const cases: CaseItem[] = [
     description:
       "Социально значимый креативный проект в программе 2–3 бесплатных сайтов в месяц. Те же правила EasySite, без счёта клиенту.",
     domain: "easysite-gorod-sveta.ru",
-    accent: "#F1FEC8",
+    accent: "#FFF8A8",
   },
   {
     slug: "shkola-ryadom",
@@ -127,7 +127,7 @@ export const cases: CaseItem[] = [
     description:
       "Бесплатный сайт на общей платформе EasySite: единый стек, SSL, мониторинг. Экосистема быстрых сайтов — не разовый фриланс.",
     domain: "shkola-ryadom.easysite.ru",
-    accent: "#E8A87C",
+    accent: "#FFF275",
   },
 ];
 

@@ -15,11 +15,15 @@ type PageLoaderProps = {
 };
 
 const FAILSAFE_MS = 1400;
+/** Absolute cap — survives Strict Mode effect re-entry races. */
+const HARD_FAILSAFE_MS = 2800;
 
 /**
  * Intro overlay. Hard-guarantees dismissal:
+ * - animation complete
  * - failsafe timer
- * - cleanup always clears is-loading + marks played (Strict Mode safe)
+ * - hard failsafe (independent of animation effect)
+ * - Strict Mode safe: cleanup must NOT mark done / block re-run finish
  */
 export function PageLoader({ onComplete }: PageLoaderProps) {
   const [visible, setVisible] = useState(true);
@@ -29,6 +33,12 @@ export function PageLoader({ onComplete }: PageLoaderProps) {
 
   useLayoutEffect(() => {
     let alive = true;
+    let ctx: gsap.Context | undefined;
+
+    // Strict Mode: effect cleanup+re-run keeps the same refs.
+    // Previous cleanup must not leave doneRef=true or finish() becomes a no-op
+    // and the overlay stays forever.
+    doneRef.current = false;
 
     const finish = (markPlayed: boolean) => {
       if (doneRef.current) return;
@@ -54,6 +64,7 @@ export function PageLoader({ onComplete }: PageLoaderProps) {
       return () => {
         alive = false;
         window.clearTimeout(failsafe);
+        document.documentElement.classList.remove("is-loading");
       };
     }
 
@@ -63,6 +74,7 @@ export function PageLoader({ onComplete }: PageLoaderProps) {
         return () => {
           alive = false;
           window.clearTimeout(failsafe);
+          document.documentElement.classList.remove("is-loading");
         };
       }
     } catch {
@@ -79,10 +91,11 @@ export function PageLoader({ onComplete }: PageLoaderProps) {
       return () => {
         alive = false;
         window.clearTimeout(failsafe);
+        document.documentElement.classList.remove("is-loading");
       };
     }
 
-    const ctx = gsap.context(() => {
+    ctx = gsap.context(() => {
       const exit = () => {
         gsap.to(root, {
           yPercent: -100,
@@ -128,17 +141,31 @@ export function PageLoader({ onComplete }: PageLoaderProps) {
     return () => {
       alive = false;
       window.clearTimeout(failsafe);
-      ctx.revert();
-      // Strict Mode / HMR: never leave the site covered
+      ctx?.revert();
+      // Clear scroll lock only — do NOT set doneRef or sessionStorage.
+      // Marking done here blocked Strict Mode's second run from dismissing.
       document.documentElement.classList.remove("is-loading");
+    };
+  }, [onComplete]);
+
+  // Independent hard failsafe — not tied to animation ctx / doneRef races
+  useLayoutEffect(() => {
+    if (!visible) return;
+
+    const hard = window.setTimeout(() => {
+      document.documentElement.classList.remove("is-loading");
+      setVisible(false);
       try {
         sessionStorage.setItem(LOADER_STORAGE_KEY, "1");
       } catch {
         // ignore
       }
-      doneRef.current = true;
-    };
-  }, [onComplete]);
+      window.dispatchEvent(new CustomEvent("easysite:ready"));
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }, HARD_FAILSAFE_MS);
+
+    return () => window.clearTimeout(hard);
+  }, [visible]);
 
   if (!visible) return null;
 

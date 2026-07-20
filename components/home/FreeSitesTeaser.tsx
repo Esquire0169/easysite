@@ -10,7 +10,7 @@ export function FreeSitesTeaser() {
       <Reveal>
         <div
           data-speed="0.92"
-          className="overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_20%_20%,rgba(232,168,124,0.16),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(241,254,200,0.1),transparent_40%),#2e2b38] p-8 sm:p-10 lg:p-12"
+          className="overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_20%_20%,rgba(255,242,117,0.16),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(255,242,117,0.1),transparent_40%),#4f1db5] p-8 sm:p-10 lg:p-12"
         >
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-ember">
             Программа сообщества

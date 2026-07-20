@@ -58,7 +58,7 @@ export default async function CaseDetailPage({ params }: PageProps) {
       <div
         className="mt-10 aspect-[21/9] overflow-hidden rounded-2xl border border-vanilla/10"
         style={{
-          background: `linear-gradient(135deg, ${item.accent}40 0%, #2e2b38 50%, #23212c 100%)`,
+          background: `linear-gradient(135deg, ${item.accent}40 0%, #4f1db5 50%, #3a0ca3 100%)`,
         }}
       />
 

@@ -1,10 +1,11 @@
 export const LOADER_COLORS = [
-  "#23212C",
-  "#2E2B38",
-  "#E8A87C",
-  "#F1FEC8",
-  "#C98A5F",
-  "#23212C",
+  "#3A0CA3",
+  "#4F1DB5",
+  "#1D1D1D",
+  "#FFF275",
+  "#FFF8A8",
+  "#E8D450",
+  "#3A0CA3",
 ] as const;
 
 export const LOADER_STORAGE_KEY = "easysite-loader-played";

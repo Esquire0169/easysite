@@ -167,13 +167,13 @@ export function Header() {
           data-site-header
           className="pointer-events-auto relative z-10 flex items-center justify-between gap-3"
         >
-          <div className="nav-pill flex min-w-0 items-center gap-1 rounded-full bg-[#1c1a22]/92 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div className="nav-pill flex min-w-0 items-center gap-1 rounded-full bg-[#24066e]/92 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl">
             <Link
               href="/"
               data-brand-logo
               aria-label={siteConfig.name}
               onClick={close}
-              className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-vanilla text-cosmic transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c1a22]"
+              className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-vanilla text-cosmic transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-[#24066e]"
             >
               <LogoMark size={20} />
             </Link>
@@ -252,7 +252,7 @@ export function Header() {
             <div
               ref={shellRef}
               id={panelMenu ? `mega-${panelMenu.id}` : undefined}
-              className="mega-shell rounded-[1.75rem] border border-vanilla/8 bg-[#0d0c10]/95 px-6 py-8 opacity-0 shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:px-10 sm:py-10 lg:px-14"
+              className="mega-shell rounded-[1.75rem] border border-ink/50 bg-ink/95 px-6 py-8 opacity-0 shadow-[0_30px_80px_rgba(29,29,29,0.7)] backdrop-blur-xl sm:px-10 sm:py-10 lg:px-14"
             >
               {panelMenu ? (
                 <MegaPanel menu={panelMenu} onNavigate={close} />

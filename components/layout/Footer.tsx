@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-vanilla/10 bg-cosmic-deep">
+    <footer className="mt-auto border-t border-vanilla/10 bg-ink">
       <Container className="py-12 sm:py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
@@ -97,7 +97,7 @@ export function Footer() {
           {keyIdeas.map((idea) => (
             <span
               key={idea}
-              className="rounded-md border border-vanilla/10 bg-cosmic px-2.5 py-1 text-xs text-vanilla/60"
+              className="rounded-md border border-ink/40 bg-cosmic px-2.5 py-1 text-xs text-vanilla/60"
             >
               {idea}
             </span>
