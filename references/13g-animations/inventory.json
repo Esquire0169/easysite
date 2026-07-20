@@ -1,0 +1,139 @@
+{
+  "source": "https://www.13g.fr/",
+  "stack": [
+    "Webflow (host + IX2/Lottie)",
+    "GSAP 3.12.5 + ScrollTrigger",
+    "Lenis 1.1.13 (smooth scroll)",
+    "Swiper 11 (reviews)",
+    "Split-Type 0.3.4 (loaded, barely used — custom .tricks word/letter split instead)",
+    "Three.js r128 (loaded, no usage found on homepage)",
+    "Custom Vite bundle: https://13g.netlify.app/main.js + loader.js",
+    "jQuery 3.5.1"
+  ],
+  "animations": [
+    {
+      "id": "loader",
+      "file": "01-loader.js",
+      "desc": "Intro loader: logo fade/slide, color flash sequence, slide-up exit; once via localStorage loaderPlayed; then calls myFade()"
+    },
+    {
+      "id": "lenis",
+      "file": "02-lenis-and-scroll-fade.js",
+      "desc": "Smooth scroll (duration 1.2, expo-like easing)"
+    },
+    {
+      "id": "scroll-fade-stagger",
+      "file": "02-lenis-and-scroll-fade.js",
+      "desc": "myFade(): ScrollTrigger stagger for [fade-up], [fade-nav], [fade-left/right], .tricksword, .divider"
+    },
+    {
+      "id": "word-letter-split",
+      "file": "02-lenis-and-scroll-fade.js",
+      "desc": "Custom split of .tricks → .tricksword → .letter (not SplitType API)"
+    },
+    {
+      "id": "navbar-logo-fade",
+      "file": "03-navbar-hover-tabtitle.js",
+      "desc": "Navbar logo opacity 0 after 5% page scroll"
+    },
+    {
+      "id": "contact-btn-hover",
+      "file": "03-navbar-hover-tabtitle.js",
+      "desc": "GSAP hover expand/color swap on .button__contact__nav"
+    },
+    {
+      "id": "tab-title",
+      "file": "03-navbar-hover-tabtitle.js",
+      "desc": "Document title → '👋 Pssssht!' when tab hidden"
+    },
+    {
+      "id": "reviews-swiper",
+      "file": "04-swiper-reviews.js",
+      "desc": "Swiper loop + GSAP morph of first review card into carousel on scroll"
+    },
+    {
+      "id": "press-cards-stagger",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Adobe/Novum/Behance/Awwwards cards: random stagger scale 0.5→1 on scroll"
+    },
+    {
+      "id": "prefooter-faces",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Hover swaps founder photos (hungry/happy/face/target)"
+    },
+    {
+      "id": "showreel-magnetic",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Magnetic button .button-video-stuck (elastic pull) + expand video on click"
+    },
+    {
+      "id": "showreel-btn-hover",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Same arrow-width hover as contact button"
+    },
+    {
+      "id": "gradient-cta-click",
+      "file": "05-main-bundle-raw.js",
+      "desc": ".button__gradient__item expand blur→full + toggle slide"
+    },
+    {
+      "id": "services-tags",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Tag list shuffle/stagger in-out when switching services"
+    },
+    {
+      "id": "services-logos-stack",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Service logos fly up from y:22.9rem with random rotation unwind"
+    },
+    {
+      "id": "gradient-blur-ambient",
+      "file": "05-main-bundle-raw.js",
+      "desc": ".gradient-blur-bg infinite sine drift + scale yoyo"
+    },
+    {
+      "id": "be-true-strong-bold-cards",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Desktop hover expand video cards Be true/strong/bold with random video pick"
+    },
+    {
+      "id": "nav-dropdown",
+      "file": "05-main-bundle-raw.js",
+      "desc": "Dropdown blur + staggered items (hover desktop / click mobile)"
+    },
+    {
+      "id": "hero-lottie",
+      "files": [
+        "66bcaf8a0d0cd70b55189ccd_13g-homepage-simple.lottie",
+        "66f2cc39ec65415c40c2a3f7_13g-homepage-responsive.lottie"
+      ],
+      "desc": "Webflow Lottie in hero, scroll-triggered via .lottie-trigger (IX2)"
+    },
+    {
+      "id": "hero-title-swap",
+      "desc": "Webflow Interactions: swap H1 Activez/Réveillez + paragraph color on scroll (data-w-id)"
+    },
+    {
+      "id": "faq-accordion",
+      "desc": "Webflow IX: FAQ answer height 0→auto, icon rotate, gradient slide-in"
+    },
+    {
+      "id": "bg-videos",
+      "desc": "Autoplay looping background videos in Be true/strong/bold sections + showreel"
+    },
+    {
+      "id": "css-button-icon",
+      "file": "00-button-icon-hover.css",
+      "desc": "CSS transition on .button-icon gradient-bg translate on hover"
+    },
+    {
+      "id": "css-spin",
+      "desc": "Webflow shared.css @keyframes spin (spinner utility)"
+    }
+  ],
+  "notes": [
+    "data-barba attributes present but @barba/core is NOT loaded on homepage — page transitions incomplete/legacy",
+    "Three.js is loaded but unused on homepage",
+    "Split-Type CDN loaded but splitting is custom JS on .tricks"
+  ]
+}

@@ -1,0 +1,42 @@
+
+.button-icon {
+  position: relative;
+  overflow:hidden;
+}
+
+.button-icon .icon-arrow-block {
+  position: relative;
+  background-color: #131313;
+  transition: background-color 1s ease-in-out;
+  z-index: 1;
+    overflow:hidden;
+
+}
+
+.button-icon .icon-arrow {
+  transition: color 1s ease-in-out;
+  position: relative;
+  z-index: 2;
+}
+
+.gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 300%;
+  opacity: 1;
+  transform: translate(-90%, 30%) rotate(45deg);
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+.button-icon:hover .gradient-bg {
+  opacity: 1;
+  transform: translate(-30%, -55%) rotate(45deg);
+}
+
+
+
+.button-icon:hover .icon-arrow {
+  color: #131313;
+}

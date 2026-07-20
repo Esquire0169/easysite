@@ -1,0 +1,389 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-cosmic: #23212c;
+  --color-cosmic-lift: #2e2b38;
+  --color-cosmic-deep: #1a1820;
+  --color-vanilla: #f1fec8;
+  --color-vanilla-muted: #d8e4a8;
+  --color-ember: #e8a87c;
+  --color-ember-hover: #f0b892;
+  --color-ember-deep: #c98a5f;
+
+  --font-display: var(--font-syne);
+  --font-sans: var(--font-manrope);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
+  html.is-loading,
+  html.is-loading body {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-cosmic);
+    color: var(--color-vanilla);
+    font-family: var(--font-manrope), system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-ember) 55%, transparent);
+    color: var(--color-cosmic);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .font-display {
+    font-family: var(--font-syne), var(--font-manrope), system-ui, sans-serif;
+  }
+}
+
+/* Reveal starts visible — GSAP from() hides only when ST is ready.
+   (opacity:0 here caused blank sections when triggers lagged behind pins.) */
+.reveal-gsap {
+  opacity: 1;
+}
+
+.page-loader {
+  will-change: transform, background-color;
+}
+
+/* mega-text-gradient-shine */
+.text-shine {
+  background-image: linear-gradient(
+    105deg,
+    var(--color-vanilla) 0%,
+    var(--color-ember) 42%,
+    var(--color-vanilla) 58%,
+    var(--color-ember-hover) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-shine-move 3.2s linear infinite;
+}
+
+@keyframes text-shine-move {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-shine {
+    animation: none;
+    color: var(--color-ember);
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
+
+/* gsap-markers-debug badge */
+html[data-markers]::after {
+  content: "ST markers";
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 80;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-ember) 40%, transparent);
+  background: color-mix(in srgb, var(--color-cosmic) 90%, transparent);
+  color: var(--color-ember);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* CTA arrow cue — inspired by 13g button hover */
+.btn-arrow .btn-arrow__icon {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-arrow:hover .btn-arrow__icon {
+  transform: translateX(0.2rem);
+}
+
+/* Chaotic floating Be manifesto stage */
+.be-stage {
+  background:
+    radial-gradient(circle at 40% 35%, rgba(46, 43, 56, 0.55), transparent 55%);
+}
+
+.be-card {
+  z-index: 1;
+}
+
+.be-card.z-lift {
+  z-index: 30;
+}
+
+.be-shell {
+  will-change: width, height, border-radius;
+}
+
+.be-media {
+  background-size: 120% 120%;
+  animation: be-ken 14s ease-in-out infinite alternate;
+}
+
+.be-media--b {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(241, 254, 200, 0.22), transparent 42%),
+    radial-gradient(circle at 80% 70%, rgba(232, 168, 124, 0.3), transparent 45%),
+    linear-gradient(135deg, #2e2b38 0%, #23212c 55%, #1a1820 100%);
+  animation-duration: 18s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes be-ken {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate3d(-2%, 1%, 0);
+  }
+}
+
+.pill-button {
+  font-feature-settings: "ss01" on;
+}
+
+/* Consensys-style floating pill + mega menu */
+.site-header {
+  transition: padding 0.35s ease;
+}
+
+.site-header.is-condensed {
+  padding-top: 0.65rem;
+}
+
+.site-header__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.925);
+}
+
+.nav-pill {
+  transition:
+    box-shadow 0.35s ease,
+    background-color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.site-header.is-condensed .nav-pill {
+  background-color: color-mix(in srgb, #1c1a22 96%, transparent);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+.menu-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0 -2px;
+  z-index: 0;
+  border-radius: 999px;
+  background: var(--color-vanilla);
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-btn--active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.menu-btn--active .menu-btn__chevron {
+  color: var(--color-cosmic);
+}
+
+.mega-wrap {
+  will-change: grid-template-rows;
+}
+
+.mega-shell {
+  will-change: transform, opacity;
+}
+
+/* Home continuous scroll — no hard section seams */
+.hero,
+.section-features {
+  background-color: var(--color-cosmic);
+}
+
+.feature-card {
+  will-change: transform, opacity;
+}
+
+/* Consensys menu CTA — text + icon reveal */
+.menu-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.45rem 0.35rem 1rem;
+  border-radius: 999px;
+  background: var(--color-ember);
+  color: var(--color-cosmic);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.menu-cta:hover {
+  background: var(--color-ember-hover);
+}
+
+.menu-cta__text {
+  display: block;
+  overflow: hidden;
+  height: 1.15em;
+}
+
+.menu-cta__text-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-cta__text-track > span {
+  display: block;
+  line-height: 1.15;
+}
+
+.menu-cta__icon {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-cosmic);
+  color: var(--color-vanilla);
+}
+
+.menu-cta__icon-inner {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-cta:hover .menu-cta__text-track {
+  transform: translateY(-50%);
+}
+
+.menu-cta:hover .menu-cta__icon-inner {
+  transform: translateX(2px);
+}
+
+.menu-cta:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-cosmic),
+    0 0 0 4px var(--color-ember);
+}
+
+.split-word {
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Hero ambient shapes */
+@keyframes float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.05);
+  }
+}
+
+@keyframes float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3%, 2%, 0) scale(1.08);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(1.5%, 2%, 0);
+  }
+}
+
+.hero-shape-a {
+  animation: float-a 14s ease-in-out infinite;
+}
+
+.hero-shape-b {
+  animation: float-b 18s ease-in-out infinite;
+}
+
+.hero-shape-c {
+  animation: drift 22s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-gsap {
+    opacity: 1;
+  }
+
+  .hero-shape-a,
+  .hero-shape-b,
+  .hero-shape-c {
+    animation: none;
+  }
+
+  .btn-arrow .btn-arrow__icon {
+    transition: none;
+  }
+
+  .be-media {
+    animation: none;
+  }
+}

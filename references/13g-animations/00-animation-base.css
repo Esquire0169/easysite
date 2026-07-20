@@ -1,0 +1,78 @@
+
+html, body {
+  overscroll-behavior-y: none;
+
+  ::-webkit-scrollbar {
+  display: none;
+}
+}
+
+.tricksword {white-space: nowrap;}
+[fade-up], [fade-up-hero-delay], [fade-nav], .tricksword, [fade-up-hero-delay], [fade-right], [fade-left] {opacity: 0;}
+.divider {width: 0%;}
+.divider.vertical {width: 1px; height: 0%;}
+.tricksword {
+ display:inline-block;}
+.letter {display: inline-block;}
+.w-editor [fade-up], .w-editor [fade-up-hero-delay], .w-editor [fade-nav], .w-editor .tricksword, .w-editor [fade-up-hero-delay], .w-editor [fade-right], .w-editor [fade-left] {opacity: 1;}
+
+
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+
+
+.loader__logo{
+transform: translateY(100%);
+}
+
+.loader {
+	display: flex;
+}
+
+.w-editor .loader{
+display:none;
+}
+
+.loader.hidden {
+    display: none !important;
+}
+
+
+.dropdown__list__wrapper{
+display: flex;
+opacity: 0;
+}
+
+
+
+.dropdown__item{
+opacity: 0;
+}
+
+@media screen and (max-width: 1279px) and (min-width: 968px) {
+  .heading-spline.is-small {
+    font-size: 1.5rem;
+  }
+  
+  .dropdown__item{
+  height: 100%;
+  min-height: 0;
+  }
+}
+
+.w-editor .card__180__back{
+height: 80%;
+}
+
+
