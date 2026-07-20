@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MOTION } from "@/lib/motionSystem";
 import { prefersReducedMotion } from "@/lib/motion";
+
+gsap.registerPlugin(useGSAP, SplitText, ScrollTrigger);
 
 type SplitWordsProps = {
   text: string;
@@ -11,7 +16,7 @@ type SplitWordsProps = {
   as?: "h2" | "h3" | "p";
 };
 
-/** Word-by-word stagger reveal — 13g .tricksword style, without SplitType. */
+/** Word-by-word stagger reveal via SplitText. */
 export function SplitWords({
   text,
   className = "",
@@ -19,34 +24,26 @@ export function SplitWords({
 }: SplitWordsProps) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
+  useGSAP(
+    () => {
+      const node = ref.current;
+      if (!node) return;
 
-    const words = text.split(/\s+/).filter(Boolean);
-    node.innerHTML = words
-      .map(
-        (word) =>
-          `<span class="split-word inline-block whitespace-nowrap"><span class="split-word__inner inline-block">${word}</span></span>`,
-      )
-      .join(" ");
+      node.textContent = text;
 
-    const inners = node.querySelectorAll<HTMLElement>(".split-word__inner");
+      if (prefersReducedMotion()) return;
 
-    if (prefersReducedMotion()) {
-      gsap.set(inners, { clearProps: "all", y: 0, opacity: 1 });
-      return;
-    }
+      const split = SplitText.create(node, {
+        type: "words",
+        wordsClass: "split-word",
+      });
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      gsap.from(inners, {
+      gsap.from(split.words, {
         y: 28,
-        opacity: 0,
+        autoAlpha: 0,
         duration: 1.15,
         stagger: 0.04,
-        ease: "power4.out",
+        ease: MOTION.ease.soft,
         immediateRender: false,
         scrollTrigger: {
           trigger: node,
@@ -54,10 +51,13 @@ export function SplitWords({
           toggleActions: "play none none none",
         },
       });
-    }, node);
 
-    return () => ctx.revert();
-  }, [text]);
+      return () => {
+        split.revert();
+      };
+    },
+    { dependencies: [text], scope: ref },
+  );
 
   return <Tag ref={ref as never} className={className} />;
 }

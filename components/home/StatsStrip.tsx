@@ -58,7 +58,7 @@ export function StatsStrip() {
     <Section className="pt-0">
       <div
         ref={rootRef}
-        className="grid gap-4 rounded-2xl bg-cosmic-deep/40 p-6 sm:grid-cols-3 sm:p-8"
+        className="section-stats grid gap-4 rounded-2xl bg-cosmic-deep/40 p-6 will-change-transform sm:grid-cols-3 sm:p-8"
       >
         {stats.map((stat, index) => (
           <Reveal key={stat.label} delayMs={index * 70}>

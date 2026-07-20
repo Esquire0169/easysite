@@ -118,8 +118,16 @@ export function BeManifesto() {
         gsap.set(iconClose, { opacity: 0 });
 
         let attracted = false;
+        const xTo = gsap.quickTo(card, "x", {
+          duration: easeDur,
+          ease: "power3.out",
+        });
+        const yTo = gsap.quickTo(card, "y", {
+          duration: easeDur,
+          ease: "power3.out",
+        });
 
-        // Per-card magnetism around a fixed home position
+        // Per-card magnetism around a fixed home position (quickTo)
         const onMove = (event: MouseEvent) => {
           if (card.dataset.locked === "1") return;
 
@@ -134,14 +142,8 @@ export function BeManifesto() {
             attracted = true;
             const falloff = 1 - dist / radius;
             const pull = falloff * falloff;
-
-            gsap.to(card, {
-              x: baseX + dx * strength * pull,
-              y: baseY + dy * strength * pull,
-              duration: easeDur,
-              ease: "power3.out",
-              overwrite: "auto",
-            });
+            xTo(baseX + dx * strength * pull);
+            yTo(baseY + dy * strength * pull);
           } else if (attracted) {
             attracted = false;
             gsap.to(card, {
