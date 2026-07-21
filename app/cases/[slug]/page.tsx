@@ -11,6 +11,7 @@ import {
   categoryLabels,
   getCaseBySlug,
 } from "@/lib/cases";
+import { canonicalPath } from "@/lib/site";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -29,6 +30,7 @@ export async function generateMetadata({
   return {
     title: item.title,
     description: item.summary,
+    alternates: { canonical: canonicalPath(`/cases/${slug}`) },
   };
 }
 
@@ -38,7 +40,7 @@ export default async function CaseDetailPage({ params }: PageProps) {
   if (!item) notFound();
 
   return (
-    <Section className="pt-14 sm:pt-16 pb-24">
+    <Section className="page-top pb-24">
       <Reveal>
         <p className="text-sm font-medium uppercase tracking-[0.18em] text-ember">
           Кейс

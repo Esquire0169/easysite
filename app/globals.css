@@ -37,6 +37,10 @@
     scroll-behavior: auto;
   }
 
+  html.lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
   html.is-loading,
   html.is-loading body {
     overflow: hidden;
@@ -62,16 +66,66 @@
   .font-display {
     font-family: var(--font-syne), var(--font-manrope), system-ui, sans-serif;
   }
+
+  /*
+   * Clears fixed site header (pt-3/5/8 + h-12 pill ≈ 72/80/92px)
+   * plus a visible gap. !important beats Section's py-* top padding.
+   */
+  .page-top {
+    padding-top: 7rem !important;
+  }
+
+  @media (min-width: 640px) {
+    .page-top {
+      padding-top: 8rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .page-top {
+      padding-top: 8.5rem !important;
+    }
+  }
+}
+
+/* Keyboard skip link — visually hidden until focused */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--color-ember);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-cosmic),
+    0 0 0 4px var(--color-ember);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+#main-content:focus {
+  outline: none;
 }
 
 /* Reveal starts visible — GSAP from() hides only when ST is ready.
    (opacity:0 here caused blank sections when triggers lagged behind pins.) */
 .reveal-gsap {
   opacity: 1;
-}
-
-.page-loader {
-  will-change: transform, background-color;
 }
 
 /* mega-text-gradient-shine */
@@ -103,6 +157,199 @@
     background: none;
     -webkit-background-clip: unset;
     background-clip: unset;
+  }
+}
+
+/* Apple Pro–style shimmering gradient text — OrbitalDiagram «Раскрутить» only */
+.orbit-spin-btn .text-pro-shimmer {
+  background-image: linear-gradient(
+    115deg,
+    #ff6b9d 0%,
+    #ff9f43 12%,
+    #fdba74 24%,
+    #a3e635 36%,
+    #67e8f9 48%,
+    #c4b5fd 62%,
+    #6366f1 76%,
+    #e9d5ff 88%,
+    #ff6b9d 100%
+  );
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: pro-shimmer-shift 12s ease infinite;
+}
+
+@keyframes pro-shimmer-shift {
+  0%,
+  100% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin-btn .text-pro-shimmer {
+    animation: none;
+    background-position: 35% 50%;
+  }
+}
+
+/* FourSteps — hover scale (~20%), transform-only.
+   Keep card z-index below the section header CTA (z-20) so scale
+   does not steal clicks from «Подробный сценарий». */
+.four-steps-grid {
+  overflow: visible;
+}
+
+.four-step-card {
+  position: relative;
+  z-index: 1;
+  transform: scale(1);
+  transform-origin: center center;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.four-step-card:hover {
+  z-index: 2;
+  transform: scale(1.2);
+  border-color: color-mix(in srgb, var(--color-ember) 35%, transparent);
+  background-color: color-mix(in srgb, var(--color-cosmic) 80%, transparent);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--color-ember) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .four-step-card {
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .four-step-card:hover {
+    transform: scale(1);
+  }
+}
+
+/* OrbitalDiagram pills — larger ovals, flip + scale on hover */
+.orbit-stage {
+  overflow: visible;
+}
+
+.orbit-pill {
+  perspective: 800px;
+  z-index: 1;
+  min-width: 9.5rem;
+  width: max-content;
+  max-width: 11.5rem;
+  transform: scale(1);
+  transform-origin: center center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.orbit-pill:hover,
+.orbit-pill:focus-within {
+  z-index: 8;
+  transform: scale(1.2);
+}
+
+.orbit-pill-flipper {
+  position: relative;
+  min-height: 4.25rem;
+  height: 4.25rem;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.orbit-pill:hover .orbit-pill-flipper,
+.orbit-pill:focus-within .orbit-pill-flipper {
+  transform: rotateY(180deg);
+}
+
+.orbit-pill-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-vanilla) 20%, transparent);
+  background: var(--color-cosmic);
+  color: color-mix(in srgb, var(--color-vanilla) 85%, transparent);
+  font-size: 0.8125rem;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.orbit-pill-face--front {
+  position: absolute;
+  inset: 0;
+}
+
+.orbit-pill-face--back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  border-color: color-mix(in srgb, var(--color-ember) 40%, transparent);
+  color: var(--color-vanilla);
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  padding: 0.5rem 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .orbit-pill {
+    min-width: 10.5rem;
+    max-width: 12.5rem;
+  }
+
+  .orbit-pill-flipper {
+    min-height: 4.6rem;
+    height: 4.6rem;
+  }
+
+  .orbit-pill-face {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .orbit-pill-face--back {
+    font-size: 0.75rem;
+    padding: 0.55rem 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-pill {
+    transition: none;
+  }
+
+  .orbit-pill:hover,
+  .orbit-pill:focus-within {
+    transform: scale(1);
+  }
+
+  .orbit-pill-flipper {
+    transition: none;
+  }
+
+  .orbit-pill:hover .orbit-pill-flipper,
+  .orbit-pill:focus-within .orbit-pill-flipper {
+    transform: none;
   }
 }
 
@@ -146,7 +393,6 @@ html[data-markers]::after {
     width var(--resize-dur) var(--resize-ease),
     height var(--resize-dur) var(--resize-ease),
     min-height var(--resize-dur) var(--resize-ease);
-  will-change: width, height;
 }
 
 /* Case grid cards — compact baseline, grow on hover */
@@ -208,10 +454,6 @@ html[data-markers]::after {
 
 .be-card.z-lift {
   z-index: 30;
-}
-
-.be-shell {
-  will-change: width, height, border-radius;
 }
 
 .be-media {
@@ -291,22 +533,10 @@ html[data-markers]::after {
   color: var(--color-ink);
 }
 
-.mega-wrap {
-  will-change: grid-template-rows;
-}
-
-.mega-shell {
-  will-change: transform, opacity;
-}
-
 /* Home continuous scroll — no hard section seams */
 .hero,
 .section-features {
   background-color: var(--color-cosmic);
-}
-
-.feature-card {
-  will-change: transform, opacity;
 }
 
 /* Consensys menu CTA — text + icon reveal */
@@ -414,6 +644,82 @@ html[data-markers]::after {
   }
   50% {
     transform: translate3d(1.5%, 2%, 0);
+  }
+}
+
+/*
+ * ExplodedView 1:1 fullscreen — hide real site header only while this
+ * class is set (pinned pre-shrink phase, progress > 0). Must never apply
+ * on Hero / when the section is not flush with the viewport top.
+ */
+html.exploded-fullscreen .site-header {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none !important;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+html.exploded-fullscreen .hero-progress {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ExplodedView — mobile site mock */
+@media (max-width: 767px) {
+  .exploded-scene {
+    width: min(94vw, 100%) !important;
+    height: min(520px, 62vh) !important;
+  }
+
+  .exploded-nav .nav-pill {
+    padding: 0.2rem;
+  }
+
+  .exploded-nav__cta {
+    display: none;
+  }
+}
+
+/* ExplodedView mock — compact Consensys pills inside the 3D scene */
+.exploded-nav .menu-btn::before {
+  inset: 0;
+}
+
+.exploded-mega .mega-shell {
+  opacity: 1;
+}
+
+/* ThreePillars collision shockwaves — transform/opacity only */
+.pillar-shockwave {
+  pointer-events: none;
+  position: absolute;
+  top: 42%;
+  z-index: 5;
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: -1.5rem 0 0 -1.5rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--color-ember) 70%, var(--color-vanilla));
+  background: color-mix(in srgb, var(--color-ember) 18%, transparent);
+  opacity: 0;
+  transform: scale(0);
+}
+
+.pillar-shockwave--ab {
+  left: 33.333%;
+}
+
+.pillar-shockwave--bc {
+  left: 66.666%;
+}
+
+@media (max-width: 767px) {
+  .pillar-shockwave {
+    display: none;
   }
 }
 

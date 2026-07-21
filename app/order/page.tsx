@@ -4,12 +4,13 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { fixedFormula, honestLine, siteConfig } from "@/lib/site";
+import { fixedFormula, honestLine, siteConfig, canonicalPath } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Заказать сайт",
   description:
     "Заявка на сайт EasySite за 10 000 ₽: готовый сайт за 24 часа без правок на нашей инфраструктуре.",
+  alternates: { canonical: canonicalPath("/order") },
 };
 
 const afterOrder = [
@@ -30,7 +31,7 @@ const afterOrder = [
 export default function OrderPage() {
   return (
     <>
-      <Section className="pt-14 sm:pt-16">
+      <Section className="page-top">
         <PageHeader
           eyebrow="Платный оффер"
           title="Заказать сайт за 10 000 ₽"

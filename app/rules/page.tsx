@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { fixedFormula, honestLine, siteConfig } from "@/lib/site";
+import { fixedFormula, honestLine, siteConfig, canonicalPath } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Правила EasySite",
   description:
     "Манифест EasySite: фиксированная цена 10 000 ₽, срок 24 часа, без правок, свой хостинг и домены easysite.",
+  alternates: { canonical: canonicalPath("/rules") },
 };
 
 const rules = [
@@ -45,7 +46,7 @@ const rules = [
 export default function RulesPage() {
   return (
     <>
-      <Section className="pt-14 sm:pt-16">
+      <Section className="page-top">
         <PageHeader
           eyebrow="Манифест"
           title="Правила EasySite"

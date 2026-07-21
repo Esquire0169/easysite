@@ -4,12 +4,13 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { siteConfig } from "@/lib/site";
+import { canonicalPath, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Технологии и хостинг",
   description:
     "Собственный хостинг EasySite: сервера, SSL, домены с префиксом easysite и FAQ по платформе.",
+  alternates: { canonical: canonicalPath("/tech") },
 };
 
 const pillars = [
@@ -60,7 +61,7 @@ const faq = [
 export default function TechPage() {
   return (
     <>
-      <Section className="pt-14 sm:pt-16">
+      <Section className="page-top">
         <PageHeader
           eyebrow="Инфраструктура"
           title="Технологии и хостинг"

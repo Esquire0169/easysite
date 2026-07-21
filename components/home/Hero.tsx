@@ -96,7 +96,7 @@ export function Hero() {
     >
       <div
         ref={layerRef}
-        className="hero-illustration pointer-events-none absolute inset-0 -z-10 will-change-transform"
+        className="hero-illustration pointer-events-none absolute inset-0 -z-10"
         aria-hidden
       >
         <div
@@ -165,7 +165,7 @@ export function Hero() {
           aria-hidden
         >
           <div className="h-[2px] flex-1 overflow-hidden rounded-full bg-vanilla/15">
-            <div className="hero-progress-bar h-full w-full origin-left scale-x-0 bg-ember will-change-transform" />
+            <div className="hero-progress-bar h-full w-full origin-left scale-x-0 bg-ember" />
           </div>
           <span className="text-xs font-medium tracking-widest text-vanilla/45">
             scroll

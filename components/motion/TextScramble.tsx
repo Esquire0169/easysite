@@ -5,7 +5,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
 
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯ0123456789";
+const GLYPHS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯ0123456789";
 
 type TextScrambleProps = {
   text: string;
@@ -17,6 +18,8 @@ type TextScrambleProps = {
 
 /**
  * mega-text-scramble / ScrambleTextPlugin stand-in (Club plugin not required).
+ * Glyphs live in a child span React does not own as text children — mutating
+ * textContent there will not break removeChild on route changes.
  */
 export function TextScramble({
   text,
@@ -24,16 +27,15 @@ export function TextScramble({
   as: Tag = "span",
   immediate = false,
 }: TextScrambleProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
-    if (prefersReducedMotion()) {
-      node.textContent = text;
-      return;
-    }
+    node.textContent = text;
+
+    if (prefersReducedMotion()) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -80,8 +82,8 @@ export function TextScramble({
   }, [text, immediate]);
 
   return (
-    <Tag ref={ref as never} className={className}>
-      {text}
+    <Tag className={className}>
+      <span ref={ref} />
     </Tag>
   );
 }

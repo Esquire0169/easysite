@@ -31,6 +31,10 @@ export function StatsStrip() {
       return;
     }
 
+    numbers.forEach((node) => {
+      node.textContent = "0";
+    });
+
     const ctx = gsap.context(() => {
       numbers.forEach((node) => {
         const end = Number(node.dataset.count ?? 0);
@@ -64,7 +68,8 @@ export function StatsStrip() {
           <Reveal key={stat.label} delayMs={index * 70}>
             <div className="text-center sm:text-left">
               <p className="font-display text-4xl font-semibold tracking-tight text-ember sm:text-5xl">
-                <span data-count={stat.value}>0</span>
+                {/* Empty host — count text is owned by GSAP, not React children */}
+                <span data-count={stat.value} />
                 {stat.suffix}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-vanilla/65">

@@ -1,11 +1,12 @@
 import { BeManifesto } from "@/components/home/BeManifesto";
 import { CasesPreview } from "@/components/home/CasesPreview";
+import { ExplodedView } from "@/components/home/ExplodedView";
 import { FreeSitesTeaser } from "@/components/home/FreeSitesTeaser";
 import { Hero } from "@/components/home/Hero";
-import { HowPreview } from "@/components/home/HowPreview";
-import { OneServiceDiagram } from "@/components/home/OneServiceDiagram";
-import { ShowcaseStack } from "@/components/home/ShowcaseStack";
+import { FourSteps } from "@/components/home/FourSteps";
+import { OrbitalDiagram } from "@/components/home/OrbitalDiagram";
 import { StatsStrip } from "@/components/home/StatsStrip";
+import { ThreePillars } from "@/components/home/ThreePillars";
 import { HomeScroll } from "@/components/motion/HomeScroll";
 import { Marquee } from "@/components/motion/Marquee";
 import { keyIdeas } from "@/lib/site";
@@ -16,12 +17,13 @@ export default function HomePage() {
       <HomeScroll />
 
       <Hero />
+      <ExplodedView />
+      <ThreePillars />
       <Marquee items={keyIdeas} />
-      <ShowcaseStack />
       <BeManifesto />
       <StatsStrip />
-      <OneServiceDiagram />
-      <HowPreview />
+      <OrbitalDiagram />
+      <FourSteps />
       <FreeSitesTeaser />
       <CasesPreview />
     </>

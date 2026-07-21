@@ -4,11 +4,12 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { siteConfig } from "@/lib/site";
+import { canonicalPath, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Контакты",
   description: "Контакты EasySite: email, Telegram, VK и заявка на сайт.",
+  alternates: { canonical: canonicalPath("/contact") },
 };
 
 const channels = [
@@ -31,7 +32,7 @@ const channels = [
 
 export default function ContactPage() {
   return (
-    <Section className="pt-14 sm:pt-16 pb-24">
+    <Section className="page-top pb-24">
       <PageHeader
         eyebrow="Связь"
         title="Контакты"

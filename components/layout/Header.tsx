@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { HeaderScroll } from "@/components/motion/HeaderScroll";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { MegaPanel } from "@/components/layout/MegaPanel";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { ArrowIcon, ChevronIcon, LogoMark, MenuIcon } from "@/components/ui/icons";
+import { useFocusTrap } from "@/lib/focusTrap";
 import { megaMenus } from "@/lib/nav";
 import { EASE, prefersReducedMotion } from "@/lib/motion";
 import { siteConfig } from "@/lib/site";
@@ -16,6 +17,7 @@ export function Header() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [renderId, setRenderId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef<string | null>(null);
@@ -23,19 +25,37 @@ export function Header() {
   const expanded = Boolean(openId);
   const panelMenu = megaMenus.find((m) => m.id === renderId) ?? null;
 
+  const close = useCallback(() => setOpenId(null), []);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  useFocusTrap(expanded, headerRef, close, { focusOnActivate: false });
+
   useEffect(() => {
     if (!expanded) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenId(null);
-    };
-    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = previous;
-      window.removeEventListener("keydown", onKey);
     };
   }, [expanded]);
+
+  useEffect(() => {
+    const main = document.getElementById("main-content");
+    const footer = document.querySelector("footer");
+    const lock = expanded || mobileOpen;
+    if (main) {
+      if (lock) main.setAttribute("inert", "");
+      else main.removeAttribute("inert");
+    }
+    if (footer instanceof HTMLElement) {
+      if (lock) footer.setAttribute("inert", "");
+      else footer.removeAttribute("inert");
+    }
+    return () => {
+      main?.removeAttribute("inert");
+      if (footer instanceof HTMLElement) footer.removeAttribute("inert");
+    };
+  }, [expanded, mobileOpen]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -136,12 +156,11 @@ export function Header() {
     setOpenId(id);
   };
 
-  const close = () => setOpenId(null);
-
   return (
     <>
       <HeaderScroll />
       <header
+        ref={headerRef}
         className={[
           "site-header pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-5 lg:px-10 lg:pt-8",
           expanded ? "site-header--expanded" : "",
@@ -155,6 +174,7 @@ export function Header() {
 
         <button
           type="button"
+          tabIndex={-1}
           aria-label="Закрыть меню"
           className={[
             "site-header__backdrop pointer-events-auto fixed inset-0 -z-10 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -264,7 +284,7 @@ export function Header() {
         </div>
       </header>
 
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav open={mobileOpen} onClose={closeMobile} />
     </>
   );
 }

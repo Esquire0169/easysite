@@ -8,6 +8,13 @@ import "lenis/dist/lenis.css";
 import { enableScrollDebugIfNeeded } from "@/lib/enableScrollDebug";
 import { prefersReducedMotion } from "@/lib/motion";
 
+let lenisInstance: Lenis | null = null;
+
+/** Active Lenis instance from SmoothScroll (null when reduced-motion or unmounted). */
+export function getLenis() {
+  return lenisInstance;
+}
+
 /**
  * Consensys-style Lenis: window scroll + GSAP ticker, no scrollerProxy.
  * Sticky + scrub stacks break when proxy fights native sticky.
@@ -27,6 +34,7 @@ export function SmoothScroll() {
       // driven by gsap.ticker — avoid double RAF clocks
       autoRaf: false,
     });
+    lenisInstance = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -46,7 +54,8 @@ export function SmoothScroll() {
       window.removeEventListener("resize", onResize);
       gsap.ticker.remove(onTick);
       lenis.destroy();
-      document.documentElement.classList.remove("lenis", "lenis-smooth");
+      lenisInstance = null;
+      document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-stopped");
     };
   }, []);
 

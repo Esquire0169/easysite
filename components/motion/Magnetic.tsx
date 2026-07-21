@@ -35,6 +35,9 @@ export function Magnetic({
       const dist = Math.hypot(dx, dy);
 
       if (dist < radius) {
+        if (!active) {
+          node.style.willChange = "transform";
+        }
         active = true;
         gsap.to(node, {
           x: dx * strength,
@@ -51,6 +54,12 @@ export function Magnetic({
           duration: 1.2,
           ease: "elastic.out(1, 0.45)",
           overwrite: "auto",
+          onComplete: () => {
+            if (!active) {
+              node.style.willChange = "";
+              gsap.set(node, { clearProps: "will-change" });
+            }
+          },
         });
       }
     };
@@ -58,12 +67,13 @@ export function Magnetic({
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
-      gsap.set(node, { clearProps: "transform" });
+      node.style.willChange = "";
+      gsap.set(node, { clearProps: "transform,will-change" });
     };
   }, [radius, strength]);
 
   return (
-    <div ref={ref} className={`inline-flex will-change-transform ${className}`}>
+    <div ref={ref} className={`inline-flex ${className}`}>
       {children}
     </div>
   );

@@ -4,12 +4,13 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { honestLine, siteConfig } from "@/lib/site";
+import { canonicalPath, honestLine, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "О нас",
   description:
     "EasySite — дочерний проект Web Giants. Быстрый и честный сервис сайтов за 24 часа.",
+  alternates: { canonical: canonicalPath("/about") },
 };
 
 const principles = [
@@ -30,7 +31,7 @@ const principles = [
 export default function AboutPage() {
   return (
     <>
-      <Section className="pt-14 sm:pt-16">
+      <Section className="page-top">
         <PageHeader
           eyebrow={`${siteConfig.name} × ${siteConfig.parent}`}
           title="О EasySite"

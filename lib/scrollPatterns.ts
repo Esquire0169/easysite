@@ -17,8 +17,13 @@
  * | mega-transition-pixelate       | RouteTransition pixels                             |
  * | gsap-gooey-overlay             | RouteTransition circle clip                        |
  * | gsap-observer-snap             | ?snap=1 → SnapSections                             |
- * | batch-reveal                   | HomeScroll feature cards                           |
  * | progress-scroll                | Hero progress bar                                  |
+ * | pin-scrub-explode              | ExplodedView (home, between Hero and pillars)      |
+ * | fly-in-pillars                 | ThreePillars (replaces HomeScroll feature batch)   |
+ * | orbit-scrub-spin               | OrbitalDiagram (scrub + «Раскрутить» button spin)  |
+ *
+ * Note: HomeScroll no longer batch-reveals feature cards — ThreePillars owns
+ * that section’s ScrollTrigger (L/B/R fly-in) to avoid double animation.
  */
 
 export const SCROLL_PATTERNS = {

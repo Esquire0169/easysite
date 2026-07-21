@@ -36,7 +36,7 @@ export function Marquee({ items, className = "" }: MarqueeProps) {
       className={`overflow-hidden bg-cosmic-deep/30 ${className}`}
       aria-hidden
     >
-      <div ref={trackRef} className="flex w-max gap-8 py-4 will-change-transform">
+      <div ref={trackRef} className="flex w-max gap-8 py-4">
         {loop.map((item, index) => (
           <span
             key={`${item}-${index}`}

@@ -13,6 +13,7 @@ type TextCycleProps = {
 
 /**
  * gsap-plugin-textplugin — cycles phrases via TextPlugin.
+ * Host span has no React text children so TextPlugin mutations stay safe.
  */
 export function TextCycle({
   phrases,
@@ -25,13 +26,11 @@ export function TextCycle({
     const node = ref.current;
     if (!node || phrases.length < 2) return;
 
-    if (prefersReducedMotion()) {
-      node.textContent = phrases[0] ?? "";
-      return;
-    }
+    node.textContent = phrases[0] ?? "";
+
+    if (prefersReducedMotion()) return;
 
     gsap.registerPlugin(TextPlugin);
-    node.textContent = phrases[0] ?? "";
 
     let i = 0;
     const tick = () => {
@@ -50,9 +49,5 @@ export function TextCycle({
     };
   }, [phrases, intervalMs]);
 
-  return (
-    <span ref={ref} className={className}>
-      {phrases[0]}
-    </span>
-  );
+  return <span ref={ref} className={className} />;
 }

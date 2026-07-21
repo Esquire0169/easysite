@@ -18,18 +18,11 @@ export function SplitWords({
   as: Tag = "h2",
 }: SplitWordsProps) {
   const ref = useRef<HTMLElement>(null);
+  const words = text.split(/\s+/).filter(Boolean);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-
-    const words = text.split(/\s+/).filter(Boolean);
-    node.innerHTML = words
-      .map(
-        (word) =>
-          `<span class="split-word inline-block whitespace-nowrap"><span class="split-word__inner inline-block">${word}</span></span>`,
-      )
-      .join(" ");
 
     const inners = node.querySelectorAll<HTMLElement>(".split-word__inner");
 
@@ -59,5 +52,16 @@ export function SplitWords({
     return () => ctx.revert();
   }, [text]);
 
-  return <Tag ref={ref as never} className={className} />;
+  return (
+    <Tag ref={ref as never} className={className}>
+      {words.map((word, index) => (
+        <span key={`${word}-${index}`}>
+          {index > 0 ? " " : null}
+          <span className="split-word inline-block whitespace-nowrap">
+            <span className="split-word__inner inline-block">{word}</span>
+          </span>
+        </span>
+      ))}
+    </Tag>
+  );
 }

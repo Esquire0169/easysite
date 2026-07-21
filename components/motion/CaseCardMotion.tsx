@@ -81,7 +81,7 @@ export function CaseCardMotion({ children, className = "" }: CaseCardMotionProps
   }, []);
 
   return (
-    <div ref={ref} className={`h-full overflow-visible will-change-transform ${className}`}>
+    <div ref={ref} className={`h-full overflow-visible ${className}`}>
       {children}
     </div>
   );

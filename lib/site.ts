@@ -3,6 +3,15 @@
  * when extending the site with new pages or sections.
  */
 
+/**
+ * Public origin for metadataBase / canonicals (no trailing slash).
+ * GitHub Pages deploy uses basePath `/easysite` — keep that path in the URL.
+ * Override with NEXT_PUBLIC_SITE_URL when hosting elsewhere.
+ */
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+  "https://esquire0169.github.io/easysite";
+
 export const siteConfig = {
   name: "EasySite",
   parent: "Web Giants",
@@ -15,7 +24,15 @@ export const siteConfig = {
   telegram: "https://t.me/easysite",
   vk: "https://vk.com/easysite",
   domainExamples: ["easysite-projectname.ru", "projectname.easysite.ru"],
+  url: siteUrl,
 } as const;
+
+/** Trailing-slash path for Metadata `alternates.canonical` (matches `trailingSlash: true`). */
+export function canonicalPath(path = "/"): string {
+  if (path === "/" || path === "") return "/";
+  const trimmed = path.startsWith("/") ? path : `/${path}`;
+  return trimmed.endsWith("/") ? trimmed : `${trimmed}/`;
+}
 
 export type NavItem = {
   href: string;

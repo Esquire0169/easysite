@@ -6,11 +6,13 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { getFreeCases } from "@/lib/cases";
+import { canonicalPath } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Бесплатные сайты",
   description:
     "Программа EasySite: 2–3 бесплатных сайта в месяц для крутых и социально значимых проектов.",
+  alternates: { canonical: canonicalPath("/free-sites") },
 };
 
 const conditions = [
@@ -25,7 +27,7 @@ export default function FreeSitesPage() {
 
   return (
     <>
-      <Section className="pt-14 sm:pt-16">
+      <Section className="page-top">
         <PageHeader
           eyebrow="Сообщество"
           title="Бесплатные сайты"

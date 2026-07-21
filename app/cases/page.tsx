@@ -5,11 +5,13 @@ import { TextCycle } from "@/components/motion/TextCycle";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { cases } from "@/lib/cases";
+import { canonicalPath } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Кейсы",
   description:
     "Галерея проектов EasySite: платные и бесплатные сайты на общей платформе.",
+  alternates: { canonical: canonicalPath("/cases") },
 };
 
 /* Genitive after «для»: each phrase must agree with that slot */
@@ -23,7 +25,7 @@ const CYCLE = [
 export default function CasesPage() {
   return (
     <>
-      <Section className="pt-14 sm:pt-16 pb-8">
+      <Section className="page-top pb-8">
         <div className="max-w-3xl">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-ember">
             Портфолио платформы

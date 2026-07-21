@@ -104,9 +104,8 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     [len],
   );
 
-  useEffect(() => {
-    layoutRef.current = layout;
-  }, [layout]);
+  // Sync during render so mount layout effect never calls a noop stub.
+  layoutRef.current = layout;
 
   const goTo = useCallback(
     (raw: number, { animate = true, fromUser = false } = {}) => {
@@ -165,31 +164,36 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
   useLayoutEffect(() => {
     if (!len) return;
 
-    gsap.registerPlugin(Draggable, InertiaPlugin);
     reducedRef.current = prefersReducedMotion();
 
     const stage = stageRef.current;
     if (!stage) return;
 
+    // Cover-flow layout first — independent of plugins / scroll gates.
+    const applyInitial = () => {
+      cardsRef.current.forEach((card) => {
+        if (card) gsap.set(card, { autoAlpha: 1 });
+      });
+      layout(0);
+    };
+    applyInitial();
+    const raf = window.requestAnimationFrame(applyInitial);
+
+    if (reducedRef.current) {
+      return () => {
+        window.cancelAnimationFrame(raf);
+      };
+    }
+
+    gsap.registerPlugin(Draggable, InertiaPlugin);
+
     const proxy = document.createElement("div");
     proxyRef.current = proxy;
     gsap.set(proxy, { x: 0 });
 
-    // Visible immediately — no opacity trap
-    cardsRef.current.forEach((card) => {
-      if (card) gsap.set(card, { autoAlpha: 1 });
-    });
-    layoutRef.current(0);
-
-    if (reducedRef.current) {
-      return () => {
-        proxyRef.current = null;
-      };
-    }
-
     const applyFromProxy = () => {
       const progress = -Number(gsap.getProperty(proxy, "x")) / CELL;
-      layoutRef.current(progress);
+      layout(progress);
       syncIndex(progress);
     };
 
@@ -198,7 +202,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
       const snapped = Math.round(progress);
       const normalized = wrapIndex(snapped, len);
       gsap.set(proxy, { x: -normalized * CELL });
-      layoutRef.current(normalized);
+      layout(normalized);
       syncIndex(normalized);
     };
 
@@ -229,11 +233,12 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     });
 
     return () => {
+      window.cancelAnimationFrame(raf);
       draggable.kill();
       gsap.killTweensOf(proxy);
       proxyRef.current = null;
     };
-  }, [len, syncIndex]);
+  }, [layout, len, syncIndex]);
 
   // Keyboard when section (or child) is focused
   useEffect(() => {
@@ -257,7 +262,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     return () => section.removeEventListener("keydown", onKey);
   }, [go, len]);
 
-  // Gentle autoplay — pauses after interaction / when tab hidden
+  // Autoplay armed on mount — first advance after AUTO_MS (not gated on scroll).
   useEffect(() => {
     if (len < 2 || prefersReducedMotion()) return;
 
@@ -341,7 +346,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
                 ref={(node) => {
                   cardsRef.current[i] = node;
                 }}
-                className="cover-card t-resize absolute left-1/2 top-1/2 flex flex-col overflow-hidden rounded-[1.5rem] border border-ink/40 bg-ink shadow-[0_28px_60px_rgba(29,29,29,0.55)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
+                className="cover-card t-resize absolute left-1/2 top-1/2 flex flex-col overflow-hidden rounded-[1.5rem] border border-ink/40 bg-ink shadow-[0_28px_60px_rgba(29,29,29,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember"
                 style={{
                   transformStyle: "preserve-3d",
                   backfaceVisibility: "hidden",

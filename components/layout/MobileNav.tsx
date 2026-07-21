@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useFocusTrap } from "@/lib/focusTrap";
 import { navItems } from "@/lib/site";
 import { PillButton } from "@/components/ui/PillButton";
 
@@ -11,6 +12,10 @@ type MobileNavProps = {
 };
 
 export function MobileNav({ open, onClose }: MobileNavProps) {
+  const drawerRef = useRef<HTMLElement>(null);
+
+  useFocusTrap(open, drawerRef, onClose);
+
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
@@ -19,15 +24,6 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
       document.body.style.overflow = previous;
     };
   }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
 
   return (
     <div
@@ -39,6 +35,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
     >
       <button
         type="button"
+        tabIndex={-1}
         aria-label="Закрыть меню"
         className={[
           "absolute inset-0 bg-cosmic-deep/75 backdrop-blur-md transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -48,6 +45,12 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
       />
 
       <aside
+        ref={drawerRef}
+        role="dialog"
+        aria-modal={open}
+        aria-label="Мобильное меню"
+        tabIndex={-1}
+        inert={open ? undefined : true}
         className={[
           "absolute right-0 top-0 flex h-full w-[min(100%,22rem)] flex-col border-l border-vanilla/10 bg-cosmic shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           open ? "translate-x-0" : "translate-x-full",
