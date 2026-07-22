@@ -223,13 +223,23 @@ export function ThreePillars() {
       // Mobile: stacked layout, staggered fade once per page view
       mm.add("(max-width: 767px)", () => {
         clearDesktopLayout();
+        // Equal-height stack without absolute stage / horizontal push.
+        stage.style.height = "";
+        cards.forEach((card) => {
+          card.style.position = "";
+          card.style.top = "";
+          card.style.left = "";
+          card.style.width = "100%";
+          card.style.height = "auto";
+          card.style.maxWidth = "100%";
+        });
 
         if (prefersReducedMotion()) {
-          gsap.set(cards, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
+          gsap.set(cards, { autoAlpha: 1, x: 0, y: 0, scale: 1, clearProps: "transform" });
           return;
         }
 
-        gsap.set(cards, { autoAlpha: 0, y: 24, x: 0, scale: 1 });
+        gsap.set(cards, { autoAlpha: 0, y: 20, x: 0, scale: 1 });
 
         const tl = gsap.timeline({
           defaults: { overwrite: "auto" },
@@ -244,9 +254,12 @@ export function ThreePillars() {
         tl.to(cards, {
           autoAlpha: 1,
           y: 0,
-          duration: 0.65,
-          stagger: 0.12,
+          duration: 0.55,
+          stagger: 0.1,
           ease: "power3.out",
+          onComplete: () => {
+            gsap.set(cards, { clearProps: "transform" });
+          },
         });
 
         return () => {
@@ -263,7 +276,7 @@ export function ThreePillars() {
   return (
     <section
       ref={sectionRef}
-      className="section-pillars relative overflow-visible py-24 sm:py-28 lg:py-32"
+      className="section-pillars relative overflow-x-clip overflow-y-visible py-24 sm:py-28 lg:py-32"
     >
       <div
         className="pointer-events-none absolute -left-28 top-1/3 h-80 w-80 rounded-full bg-ember/15 blur-3xl"
@@ -298,7 +311,7 @@ export function ThreePillars() {
               ref={(el) => {
                 cardsRef.current[i] = el;
               }}
-              className="w-full overflow-visible will-change-transform"
+              className="w-full max-w-full overflow-visible md:will-change-transform"
             >
               <Card
                 hover

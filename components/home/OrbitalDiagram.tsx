@@ -57,7 +57,7 @@ function orbitRadiusPercent(): number {
  * One-service orbital diagram — scrub-linked ring + pills, button spin.
  * Outer ring CW, pills CCW; pill labels counter-rotate to stay upright.
  * Pills: CSS 3D flip on hover (front = label, back = description).
- * Mobile (<768): text only. prefers-reduced-motion: static diagram.
+ * Mobile (<768): text + compact list only. prefers-reduced-motion: static diagram.
  */
 export function OrbitalDiagram() {
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -154,6 +154,15 @@ export function OrbitalDiagram() {
           spinRef.current = null;
         };
       });
+
+      // Mobile: ensure no leftover orbit transforms if breakpoint flips.
+      mm.add("(max-width: 767px)", () => {
+        spinRef.current = null;
+        gsap.set([ring, pillsContainer], { clearProps: "transform" });
+        pillInnersRef.current.forEach((el) => {
+          if (el) gsap.set(el, { clearProps: "transform" });
+        });
+      });
     }, trigger);
 
     return () => {
@@ -181,6 +190,20 @@ export function OrbitalDiagram() {
             домен, хостинг и техническую настройку. Вы получаете ссылку на
             готовый сайт, который уже работает.
           </p>
+
+          {/* Mobile-only stack — no orbit / drag / filters */}
+          <ul className="mt-8 space-y-4 md:hidden">
+            {ORBIT_ITEMS.map((item) => (
+              <li key={item.label} className="border-l-2 border-ember/40 pl-4">
+                <p className="font-display text-base font-semibold text-vanilla">
+                  {item.label}
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-vanilla/55">
+                  {item.desc}
+                </p>
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         {/* Orbit + spin — desktop / tablet only */}
@@ -190,7 +213,7 @@ export function OrbitalDiagram() {
             className="orbit-stage relative aspect-square w-full overflow-visible"
             aria-hidden="true"
           >
-            <div className="pointer-events-none absolute inset-[12%] rounded-full bg-cosmic-lift/40 blur-2xl" />
+            <div className="pointer-events-none absolute inset-[12%] rounded-full bg-cosmic-lift/40" />
 
             {/* Inner decorative ring */}
             <div className="pointer-events-none absolute inset-[28%] rounded-full border border-vanilla/10" />
@@ -285,7 +308,7 @@ export function OrbitalDiagram() {
           <Button
             type="button"
             variant="secondary"
-            className="orbit-spin-btn"
+            className="orbit-spin-btn hidden md:inline-flex"
             disabled={reducedMotion}
             onClick={() => spinRef.current?.()}
             aria-label="Раскрутить орбиту"

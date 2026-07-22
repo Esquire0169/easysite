@@ -16,16 +16,24 @@ export function Marquee({ items, className = "" }: MarqueeProps) {
     const track = trackRef.current;
     if (!track || prefersReducedMotion()) return;
 
-    const width = track.scrollWidth / 2;
-    const tween = gsap.to(track, {
-      x: -width,
-      duration: 28,
-      ease: "none",
-      repeat: -1,
+    // Mobile: static strip — continuous x tween is cheap but unnecessary GPU churn.
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      const width = track.scrollWidth / 2;
+      const tween = gsap.to(track, {
+        x: -width,
+        duration: 28,
+        ease: "none",
+        repeat: -1,
+      });
+      return () => {
+        tween.kill();
+        gsap.set(track, { clearProps: "transform" });
+      };
     });
 
     return () => {
-      tween.kill();
+      mm.revert();
     };
   }, [items]);
 

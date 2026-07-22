@@ -21,8 +21,16 @@ type CasesCoverFlowProps = {
 };
 
 const AUTO_MS = 4500;
-const SPACING = 210;
+const SPACING_DESKTOP = 210;
+const SPACING_MOBILE = 168;
 const CELL = 240;
+
+function isMobileViewport() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 767px)").matches
+  );
+}
 
 function wrapIndex(n: number, len: number) {
   return ((Math.round(n) % len) + len) % len;
@@ -44,6 +52,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
   const dragMovedRef = useRef(false);
   const pauseUntilRef = useRef(0);
   const reducedRef = useRef(false);
+  const flatRef = useRef(false);
   const layoutRef = useRef<(progress: number) => void>(() => {});
 
   const [index, setIndex] = useState(0);
@@ -63,6 +72,9 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
       const cards = cardsRef.current;
       if (!cards.length || !len) return;
 
+      const spacing = flatRef.current ? SPACING_MOBILE : SPACING_DESKTOP;
+      const flat = flatRef.current || reducedRef.current;
+
       cards.forEach((card, i) => {
         if (!card) return;
 
@@ -71,12 +83,12 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
         while (d < -len / 2) d += len;
 
         const abs = Math.abs(d);
-        const x = d * SPACING;
-        const rotateY = reducedRef.current
-          ? 0
-          : gsap.utils.clamp(-55, 55, d * -32);
-        const z = reducedRef.current ? 0 : -abs * 110;
-        const scale = gsap.utils.clamp(0.72, 1, 1 - abs * 0.1);
+        const x = d * spacing;
+        const rotateY = flat ? 0 : gsap.utils.clamp(-55, 55, d * -32);
+        const z = flat ? 0 : -abs * 110;
+        const scale = flat
+          ? gsap.utils.clamp(0.88, 1, 1 - abs * 0.08)
+          : gsap.utils.clamp(0.72, 1, 1 - abs * 0.1);
         const opacity =
           abs > 2.4 ? 0 : gsap.utils.clamp(0.28, 1, 1 - abs * 0.28);
         const zIndex = Math.round(40 - abs * 10);
@@ -96,8 +108,8 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
           scale,
           opacity,
           zIndex,
-          transformPerspective: 1200,
-          force3D: true,
+          transformPerspective: flat ? 0 : 1200,
+          force3D: !flat,
         });
       });
     },
@@ -165,6 +177,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     if (!len) return;
 
     reducedRef.current = prefersReducedMotion();
+    flatRef.current = isMobileViewport();
 
     const stage = stageRef.current;
     if (!stage) return;
@@ -179,9 +192,23 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     applyInitial();
     const raf = window.requestAnimationFrame(applyInitial);
 
+    const onResize = () => {
+      const nextFlat = isMobileViewport();
+      if (nextFlat !== flatRef.current) {
+        flatRef.current = nextFlat;
+        layout(
+          proxyRef.current
+            ? -Number(gsap.getProperty(proxyRef.current, "x")) / CELL
+            : indexRef.current,
+        );
+      }
+    };
+    window.addEventListener("resize", onResize);
+
     if (reducedRef.current) {
       return () => {
         window.cancelAnimationFrame(raf);
+        window.removeEventListener("resize", onResize);
       };
     }
 
@@ -206,11 +233,16 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
       syncIndex(normalized);
     };
 
+    const mobile = flatRef.current;
+
     const [draggable] = Draggable.create(proxy, {
       type: "x",
       trigger: stage,
-      inertia: true,
-      dragResistance: 0.12,
+      inertia: !mobile,
+      dragResistance: mobile ? 0.22 : 0.12,
+      // Let vertical page scroll win until a clear horizontal intent.
+      minimumMovement: mobile ? 14 : 4,
+      allowNativeTouchScrolling: true,
       allowContextMenu: true,
       onPress() {
         dragMovedRef.current = false;
@@ -218,7 +250,9 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
         gsap.killTweensOf(proxy);
       },
       onDrag() {
-        if (Math.abs(this.deltaX) > 4) dragMovedRef.current = true;
+        if (Math.abs(this.deltaX) > (mobile ? 10 : 4)) {
+          dragMovedRef.current = true;
+        }
         applyFromProxy();
       },
       onThrowUpdate: applyFromProxy,
@@ -234,6 +268,7 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
 
     return () => {
       window.cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
       draggable.kill();
       gsap.killTweensOf(proxy);
       proxyRef.current = null;
@@ -306,13 +341,17 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
     >
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <p className="text-sm font-medium uppercase tracking-[0.18em] text-ember">
-          Drag · Cover-flow
+          <span className="md:hidden">Свайп · Карусель</span>
+          <span className="hidden md:inline">Drag · Cover-flow</span>
         </p>
         <h2 className="mt-2 font-display text-2xl font-semibold text-vanilla sm:text-3xl">
           Экосистема в глубину
         </h2>
         <p className="mt-3 text-sm text-vanilla/55 sm:text-base">
-          Тяните карусель — проекты уходят в перспективу.
+          <span className="md:hidden">Листайте проекты стрелками или свайпом.</span>
+          <span className="hidden md:inline">
+            Тяните карусель — проекты уходят в перспективу.
+          </span>
         </p>
       </div>
 
@@ -328,8 +367,8 @@ export function CasesCoverFlow({ items }: CasesCoverFlowProps) {
 
         <div
           ref={stageRef}
-          className="relative mx-auto h-[22rem] w-full max-w-3xl cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[24rem]"
-          style={{ perspective: "1200px", touchAction: "pan-y" }}
+          className="relative mx-auto h-[22rem] w-full max-w-3xl cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[24rem] md:touch-none"
+          style={{ perspective: "1200px" }}
           role="group"
           aria-live="polite"
           aria-atomic="true"

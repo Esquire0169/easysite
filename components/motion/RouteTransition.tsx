@@ -96,11 +96,16 @@ export function RouteTransition({ children }: RouteTransitionProps) {
       return;
     }
 
-    if (!pixels) {
+    // Mobile: simple fade — skip 48-cell pixel dissolve GPU burst.
+    const lightNav =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches;
+
+    if (lightNav || !pixels) {
       gsap.fromTo(
         node,
         { opacity: 0 },
-        { opacity: 1, duration: 0.5, ease: EASE.soft },
+        { opacity: 1, duration: 0.35, ease: EASE.soft, clearProps: "transform" },
       );
       return;
     }

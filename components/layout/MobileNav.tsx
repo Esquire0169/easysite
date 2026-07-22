@@ -20,8 +20,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
     if (!open) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Belt-and-suspenders if Lenis somehow active (e.g. large tablet).
+    document.documentElement.classList.add("lenis-stopped");
     return () => {
       document.body.style.overflow = previous;
+      document.documentElement.classList.remove("lenis-stopped");
     };
   }, [open]);
 

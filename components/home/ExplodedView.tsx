@@ -64,9 +64,11 @@ const workingWidth = () => Math.min(920, window.innerWidth * 0.88);
 const workingHeight = () => Math.min(620, window.innerHeight * 0.7);
 
 /**
- * Pin + scrub 3D “exploded” site mock.
+ * Pin + scrub 3D “exploded” site mock (desktop ≥768).
  *
- * Timeline: 1:1 fullscreen → shrink → explode → offer → hold → evaporate → lift → shatter.
+ * Desktop timeline: 1:1 fullscreen → shrink → explode → offer → hold → evaporate → lift → shatter.
+ * Mobile: no pin / no fullscreen chrome / no layer explode / no letter shatter —
+ * short scrub crossfade from static mock to offer copy; header always restored.
  * Evaporate dissolves only the tilted glass panel (scene); offer copy stays
  * briefly, lifts higher, then letters crumble so ThreePillars never follows a blank purple void.
  * Real site header hides only while this section is pinned in the
@@ -489,13 +491,14 @@ export function ExplodedView() {
         };
       });
 
+      // Mobile: no pin, no fullscreen chrome, no layer explode, no letter storm.
+      // Short scrub: static mock → fade to offer copy. Header always visible.
       mm.add("(max-width: 767px)", () => {
+        restoreChrome();
         hideFinal();
         showPanel();
-        restoreChrome();
-        // Softer path: mild overscale, no fullscreen pin drama
         gsap.set(scene, {
-          scale: 1.08,
+          scale: 1,
           rotateX: 0,
           rotateY: 0,
           autoAlpha: 1,
@@ -503,175 +506,92 @@ export function ExplodedView() {
           clearProps: "width,height",
         });
         resetLayers();
+        // Letters stay assembled — never run addLetterShatter on mobile.
+        resetShatterLetters(collectShatterLetters(finalText));
 
-        let offerVisibleProgress = 0.55;
-        let evaporateStartProgress = 0.72;
-        let shatterStartProgress = 0.86;
-
-        const shatterLetters = () => collectShatterLetters(finalText);
-
-        const syncOfferFromProgress = (self: ScrollTrigger) => {
-          if (self.progress >= shatterStartProgress) {
-            evaporatePanel();
-            showFinal();
-          } else if (self.progress >= evaporateStartProgress) {
-            evaporatePanel();
-            showFinal();
-          } else if (
-            self.progress >= offerVisibleProgress &&
-            self.progress < evaporateStartProgress
-          ) {
-            showFinal();
-            showScene();
-          }
+        const resetMobile = () => {
+          restoreChrome();
+          gsap.set(scene, {
+            scale: 1,
+            rotateX: 0,
+            rotateY: 0,
+            autoAlpha: 1,
+            clearProps: "width,height",
+          });
+          resetLayers();
+          showPanel();
+          hideFinal();
+          gsap.set(finalText, { y: 0, scale: 1 });
+          resetShatterLetters(collectShatterLetters(finalText));
         };
 
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
             trigger: wrapper,
-            start: "top 70%",
-            end: "bottom top",
-            scrub: 0.45,
+            start: "top 78%",
+            end: "bottom 35%",
+            scrub: 0.35,
             invalidateOnRefresh: true,
-            onUpdate: (self) => syncOfferFromProgress(self),
+            onUpdate: () => restoreChrome(),
             onLeave: () => {
               evaporatePanel();
               showFinal();
+              gsap.set(finalText, { y: 0, scale: 1 });
+              restoreChrome();
             },
+            onLeaveBack: resetMobile,
             onRefresh: (self) => {
-              syncOfferFromProgress(self);
-              if (self.progress <= 0.02) {
-                resetShatterLetters(shatterLetters());
+              restoreChrome();
+              if (self.progress <= 0.05) resetMobile();
+              else if (self.progress >= 0.85) {
+                evaporatePanel();
+                showFinal();
+                gsap.set(finalText, { y: 0, scale: 1 });
               }
             },
-            onLeaveBack: () => {
-              gsap.set(scene, {
-                scale: 1.08,
-                rotateX: 0,
-                rotateY: 0,
-                autoAlpha: 1,
-                clearProps: "width,height",
-              });
-              resetLayers();
-              showPanel();
-              hideFinal();
-              resetShatterLetters(shatterLetters());
-            },
           },
         });
 
-        // Soft shrink toward working size
+        // Hold mock briefly, then crossfade to offer (no 3D explode / shatter).
+        tl.to({}, { duration: 0.35 }, 0);
         tl.to(
-          scene,
+          panel,
           {
-            scale: 1,
-            rotateX: 8,
+            autoAlpha: 0,
+            scale: 1.04,
+            y: -12,
             duration: 0.55,
+            ease: "power2.in",
           },
-          0,
+          0.35,
         );
-
-        // Mild explode
         tl.to(
           scene,
           {
-            rotateX: 22,
-            scale: 0.88,
-            duration: 0.7,
+            autoAlpha: 0,
+            scale: 0.97,
+            duration: 0.55,
+            ease: "power2.in",
           },
-          0.55,
+          0.35,
         );
-
-        LAYER_CONFIGS.forEach(({ i, z, x, y, delay }) => {
-          const el = layersRef.current[i];
-          if (!el) return;
-          tl.to(
-            el,
-            {
-              z: z * 0.28,
-              x: x * 0.32,
-              y: y * 0.28,
-              duration: 1,
-            },
-            0.55 + delay * 0.4,
-          );
-        });
-
-        tl.addLabel("offerIn", 1.1);
         tl.to(
           finalText,
           {
             autoAlpha: 1,
             y: 0,
             scale: 1,
-            duration: 0.55,
-          },
-          "offerIn",
-        );
-
-        LAYER_CONFIGS.forEach(({ i, delay }) => {
-          const el = layersRef.current[i];
-          if (!el) return;
-          tl.to(
-            el,
-            {
-              opacity: 0.2,
-              duration: 0.45,
-            },
-            1.3 + delay * 0.2,
-          );
-        });
-
-        // Short hold, then evaporate panel only
-        tl.addLabel("offerHold", 1.8);
-        tl.set(finalText, { autoAlpha: 1, y: 0, scale: 1 }, "offerHold");
-        tl.set(panel, { autoAlpha: 1, y: 0, scale: 1 }, "offerHold");
-        tl.to({}, { duration: 0.28 }, "offerHold");
-
-        tl.addLabel("evaporate", 2.08);
-        tl.to(
-          panel,
-          {
-            autoAlpha: 0,
-            scale: 1.08,
-            y: -16,
             duration: 0.5,
-            ease: "power2.in",
           },
-          "evaporate",
+          0.45,
         );
-        tl.to(
-          scene,
-          {
-            autoAlpha: 0,
-            duration: 0.5,
-            ease: "power2.in",
-          },
-          "evaporate",
-        );
+        // Brief hold so offer remains readable through end of scrub.
+        tl.to({}, { duration: 0.4 }, 1.0);
 
-        tl.addLabel("offerAlone", 2.58);
-        tl.set(finalText, { autoAlpha: 1, y: 0, scale: 1 }, "offerAlone");
-        tl.to({}, { duration: 0.22 }, "offerAlone");
-
-        tl.addLabel("lift", 2.8);
-        tl.to(
-          finalText,
-          {
-            y: -90,
-            duration: 0.4,
-            ease: "none",
-          },
-          "lift",
-        );
-
-        tl.addLabel("shatter", 3.1);
-        addLetterShatter(tl, shatterLetters(), "shatter");
-
-        offerVisibleProgress = tl.labels.offerIn / tl.totalDuration();
-        evaporateStartProgress = tl.labels.evaporate / tl.totalDuration();
-        shatterStartProgress = tl.labels.shatter / tl.totalDuration();
+        return () => {
+          restoreChrome();
+        };
       });
     }, wrapper);
 

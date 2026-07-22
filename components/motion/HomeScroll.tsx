@@ -10,7 +10,7 @@ import { SCROLL_PATTERNS } from "@/lib/scrollPatterns";
 /**
  * Reliable home motion (animation-library patterns, no content-hiding pins):
  * - progress bar while hero is in view
- * - data-speed parallax on decorations only
+ * - data-speed parallax on decorations only (desktop ≥768)
  * - soft rise for [data-scroll-rise]
  *
  * Feature / pillar cards: owned by ThreePillars (fly-in) — do not batch here.
@@ -30,13 +30,14 @@ export function HomeScroll() {
     }
 
     const ctx = gsap.context(() => {
-      /* 1) Hero progress — scrub without pin */
-      const hero = document.querySelector<HTMLElement>(".hero");
-      const progressBar = document.querySelector<HTMLElement>(
-        ".hero-progress-bar",
-      );
+      const mm = gsap.matchMedia();
 
-      if (hero && progressBar) {
+      const setupHeroProgress = () => {
+        const hero = document.querySelector<HTMLElement>(".hero");
+        const progressBar = document.querySelector<HTMLElement>(
+          ".hero-progress-bar",
+        );
+        if (!hero || !progressBar) return;
         gsap.fromTo(
           progressBar,
           { scaleX: 0 },
@@ -51,39 +52,53 @@ export function HomeScroll() {
             },
           },
         );
-      }
+      };
 
-      /* 2) Parallax decorations */
-      gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
-        const speed = Number(el.dataset.speed ?? "1");
-        const travel = (1 - speed) * SCROLL_PATTERNS.parallaxTravel;
-
-        gsap.to(el, {
-          y: travel,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.closest("section") ?? el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
+      const setupSoftRise = (yTravel: number) => {
+        gsap.utils.toArray<HTMLElement>("[data-scroll-rise]").forEach((el) => {
+          gsap.from(el, {
+            y: yTravel,
+            autoAlpha: 0,
+            duration: 0.95,
+            ease: "power3.out",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none none",
+            },
+          });
         });
+      };
+
+      /* Desktop: progress + parallax + soft rise */
+      mm.add("(min-width: 768px)", () => {
+        setupHeroProgress();
+
+        gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
+          const speed = Number(el.dataset.speed ?? "1");
+          const travel = (1 - speed) * SCROLL_PATTERNS.parallaxTravel;
+
+          gsap.to(el, {
+            y: travel,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el.closest("section") ?? el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+        });
+
+        setupSoftRise(48);
       });
 
-      /* 3) Soft rise for marked sections */
-      gsap.utils.toArray<HTMLElement>("[data-scroll-rise]").forEach((el) => {
-        gsap.from(el, {
-          y: 48,
-          autoAlpha: 0,
-          duration: 0.95,
-          ease: "power3.out",
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-        });
+      /* Mobile: light progress + soft rise only — skip parallax ST flock */
+      mm.add("(max-width: 767px)", () => {
+        gsap.set("[data-speed]", { clearProps: "transform" });
+        setupHeroProgress();
+        setupSoftRise(28);
       });
 
       requestAnimationFrame(() => ScrollTrigger.refresh());

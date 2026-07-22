@@ -23,6 +23,8 @@ export function Magnetic({
   useEffect(() => {
     const node = ref.current;
     if (!node || prefersReducedMotion()) return;
+    // Touch / coarse pointers don't get magnetic hover pull.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
 
     let active = false;
 
